@@ -1,2 +1,2 @@
 # Javeats-Lites
-Restaurant mangement system
+Restaurant mangement system.
