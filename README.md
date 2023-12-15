@@ -11,7 +11,7 @@ Restful APIs for Javeats-Lites.
 ## Getting started
 
 ### Prerequisites
-- [Java 17](https://openjdk.java.net/)
+- [Java 11](https://openjdk.java.net/)
 - [Maven](https://maven.apache.org/)
 
 ### Dev run
