@@ -4,7 +4,6 @@
 Restful APIs for Javeats-Lites.
 
 ### Built with
-- Java 11
 - Spring Boot 2.7
 - PostgresSQL
 
