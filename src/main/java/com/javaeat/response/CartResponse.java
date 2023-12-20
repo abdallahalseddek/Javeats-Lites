@@ -1,5 +1,6 @@
 package com.javaeat.response;
 
+import com.javaeat.enums.CartStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,16 +13,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemsAvailabilityResponse implements Serializable {
+public class CartResponse implements Serializable {
     private static final long serialVersionUID = -8122049585335550616L;
 
-    private List<ItemAvailabilityResponse> itemsAvailabilityResponse;
+    private Integer cartId;
+    private List<ItemResponse> items;
+    private CartStatus cartStatus;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    static class ItemAvailabilityResponse{
+    static class ItemResponse {
         private Integer itemId;
-        private Boolean isAvailable;
+        private Integer quantity;
     }
 }
