@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class OrderController {
         // a method to call the service to create the order
 
         //return a fake status
-        return ResponseEntity.status(201).body(OrderResponse.builder().build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(OrderResponse.builder().build());
     }
 
     @GetMapping("/{orderId}")
