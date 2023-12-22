@@ -22,7 +22,7 @@ public class OrderResponse implements Serializable {
     private Integer restaurantId;
     private Integer deliveryId;
     private Integer paymentId;
-    private List<CartItem> items;
+    private List<CartItemRequest> items;
     private Double totalPrice;
     private Date createdAt;
     private String deliveryAddress;

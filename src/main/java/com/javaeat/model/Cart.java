@@ -1,20 +1,21 @@
 package com.javaeat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javaeat.enums.CartStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "cart")
 public class Cart {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "cart_id")
@@ -31,6 +32,41 @@ public class Cart {
     private CartStatus status;
     @Column(name = "discount")
     private Double discount;
+
+
+
+
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    List<CartItem> cartItems= new ArrayList<>();
+
+    public void addCartItem(CartItem cartItem) {
+        if(!this.cartItems.contains(cartItem)) {
+            this.cartItems.add(cartItem);
+            this.totalPrice+= cartItem.getUnitPrice();
+
+            cartItem.setCart(this); // Set the reference to the Cart on the CartItem side
+
+        }
+
+    }
+
+    public void removeCartItem(CartItem cartItem){
+        if(cartItems.contains(cartItem)){
+            cartItems.remove(cartItem);
+            cartItem.setCart(this); // Set the reference to the Cart on the CartItem side
+
+        }
+
+    }
+
+    public Cart(Double totalPrice, Integer totalItems, LocalDateTime createdAt, LocalDateTime updatedAt, CartStatus status, Double discount) {
+        this.totalPrice = totalPrice;
+        this.totalItems = totalItems;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.status = status;
+        this.discount = discount;
+    }
 
     // TODO: add @OneToOne customer
 }

@@ -1,19 +1,17 @@
 package com.javaeat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "cart_item")
 public class CartItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_item_id")
     private Integer id;
     @Column(name = "quantity")
@@ -22,9 +20,20 @@ public class CartItem {
     private Double unitPrice;
     @Column(name = "total_price")
     private Double totalPrice;
-    @ManyToOne
-    @JoinColumn(name = "cart_id",referencedColumnName = "cart_id", nullable = false)
+
+
+
+    @ManyToOne(cascade={CascadeType.ALL})
+    @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
     private Cart cart;
 
-    //TODO: add menu item id
+    public CartItem(Integer quantity, Double unitPrice, Double totalPrice,Cart cart) {
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
+        this.cart=cart;
+    }
+
+
+//TODO: add menu item id
 }

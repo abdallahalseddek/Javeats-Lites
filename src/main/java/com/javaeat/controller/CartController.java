@@ -1,15 +1,21 @@
 package com.javaeat.controller;
 
 import com.javaeat.enums.CartStatus;
+import com.javaeat.model.CartItem;
+import com.javaeat.request.CartItemRequest;
 import com.javaeat.request.CartItemsRequest;
 import com.javaeat.response.*;
+import com.javaeat.services.CartItemService;
+import com.javaeat.services.CartService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -18,6 +24,13 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Cart Endpoints")
 public class CartController {
+    private  CartService cartService;
+    private  CartItemService cartItemService;
+    @Autowired
+    public CartController(CartService cartService, CartItemService cartItemService) {
+        this.cartService = cartService;
+        this.cartItemService=cartItemService;
+    }
 
     @GetMapping("/status/{cartId}")
     @Operation(summary = "Endpoint that checks cart status",
@@ -79,5 +92,19 @@ public class CartController {
         return ResponseEntity.ok(DeleteCartResponse.builder().cartId(cartId).isDeleted(Boolean.FALSE).note("Cart status is READ_ONLY, cannot clear it.").build());
     }
 
+    @PostMapping("/additem")
+    @Operation(summary = "Add item to cart", description = "Add item to cart")
+    @ApiResponse(responseCode = "201", description = "Successful operation",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request. Invalid input data")
+    @ApiResponse(responseCode = "404", description = "Customer not found or Item not Found")
+    @ApiResponse(responseCode = "500", description = "Internal server error. Something went wrong")
+    ResponseEntity<String> addToCart(@RequestBody CartItemRequest cartItemRequest) {
+        CartItem cartItem = cartItemService.convertToEntity(cartItemRequest);
+        cartService.processCartItem(cartItem, Math.toIntExact(cartItemRequest.getCartId()));
+
+        return ResponseEntity.ok("added a new item successfully in cart");
+
+    }
 
 }
