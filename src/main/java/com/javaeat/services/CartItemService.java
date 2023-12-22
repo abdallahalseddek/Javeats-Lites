@@ -5,5 +5,7 @@ import com.javaeat.request.CartItemRequest;
 
 
 public interface CartItemService {
-    CartItem convertToEntity(CartItemRequest cartItemDto);
+    CartItem mapToEntity(CartItemRequest cartItemDto);
+    CartItemRequest mapToDto(CartItem entity);
+
 }

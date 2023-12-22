@@ -5,6 +5,7 @@ import com.javaeat.model.Cart;
 import com.javaeat.model.CartItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
+import com.javaeat.request.CartRequest;
 import com.javaeat.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,16 @@ public class CartServiceImpl implements CartService {
             newCart.addCartItem(cartItem);
             cartRepository.save(newCart); // Save the new Cart
         }
+    }
+
+    @Override
+    public Cart mapToEntity(CartRequest dto) {
+        return null;
+    }
+
+    @Override
+    public CartRequest mapToDto(Cart entity) {
+        return null;
     }
 
 

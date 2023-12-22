@@ -100,7 +100,7 @@ public class CartController {
     @ApiResponse(responseCode = "404", description = "Customer not found or Item not Found")
     @ApiResponse(responseCode = "500", description = "Internal server error. Something went wrong")
     ResponseEntity<String> addToCart(@RequestBody CartItemRequest cartItemRequest) {
-        CartItem cartItem = cartItemService.convertToEntity(cartItemRequest);
+        CartItem cartItem = cartItemService.mapToEntity(cartItemRequest);
         cartService.processCartItem(cartItem, Math.toIntExact(cartItemRequest.getCartId()));
 
         return ResponseEntity.ok("added a new item successfully in cart");

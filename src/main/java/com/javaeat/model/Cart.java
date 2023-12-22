@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "cart")
+@AllArgsConstructor
 public class Cart {
 
     @Id
@@ -37,7 +38,7 @@ public class Cart {
 
 
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL , fetch = FetchType.EAGER)
-    List<CartItem> cartItems= new ArrayList<>();
+    List<CartItem> cartItems;
 
     public void addCartItem(CartItem cartItem) {
         if(!this.cartItems.contains(cartItem)) {
@@ -58,15 +59,5 @@ public class Cart {
         }
 
     }
-
-    public Cart(Double totalPrice, Integer totalItems, LocalDateTime createdAt, LocalDateTime updatedAt, CartStatus status, Double discount) {
-        this.totalPrice = totalPrice;
-        this.totalItems = totalItems;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.status = status;
-        this.discount = discount;
-    }
-
     // TODO: add @OneToOne customer
 }

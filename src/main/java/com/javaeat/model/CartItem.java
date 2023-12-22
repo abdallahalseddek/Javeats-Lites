@@ -9,6 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "cart_item")
+@AllArgsConstructor
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,19 +21,10 @@ public class CartItem {
     private Double unitPrice;
     @Column(name = "total_price")
     private Double totalPrice;
-
-
-
     @ManyToOne(cascade={CascadeType.ALL})
     @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
     private Cart cart;
 
-    public CartItem(Integer quantity, Double unitPrice, Double totalPrice,Cart cart) {
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.cart=cart;
-    }
 
 
 //TODO: add menu item id

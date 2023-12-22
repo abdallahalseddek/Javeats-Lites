@@ -19,7 +19,12 @@ public class CartItemServiceImpl implements CartItemService {
         this.cartItemRepository =cartItemRepository;
     }
 
-    public CartItem convertToEntity(CartItemRequest cartItemDto) {
+    public CartItem mapToEntity(CartItemRequest cartItemDto) {
         return modelMapper.map(cartItemDto, CartItem.class);
+    }
+
+    @Override
+    public CartItemRequest mapToDto(CartItem entity) {
+        return modelMapper.map(entity,CartItemRequest.class);
     }
 }
