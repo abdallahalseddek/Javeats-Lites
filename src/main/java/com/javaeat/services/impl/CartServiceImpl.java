@@ -1,10 +1,11 @@
-package com.javaeat.services;
+package com.javaeat.services.impl;
 
 import com.javaeat.enums.CartStatus;
 import com.javaeat.model.Cart;
 import com.javaeat.model.CartItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
+import com.javaeat.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.Optional;
 @Service
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
     CartRepository cartRepository;
     EntityManager entityManager;
 

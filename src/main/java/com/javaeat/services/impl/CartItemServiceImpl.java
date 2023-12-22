@@ -1,13 +1,14 @@
-package com.javaeat.services;
+package com.javaeat.services.impl;
 
 import com.javaeat.model.CartItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.request.CartItemRequest;
+import com.javaeat.services.CartItemService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartItemServiceImpl implements  CartItemService{
+public class CartItemServiceImpl implements CartItemService {
     CartItemRepository cartItemRepository;
     private final ModelMapper modelMapper;
 
