@@ -69,16 +69,13 @@ public class CartController {
         return ResponseEntity.ok(ItemsAvailabilityResponse.builder().build());
     }
 
-    @PatchMapping("/modify")
+    @PatchMapping("/update")
     @Operation(summary = "Endpoint that modifies cart.",
             description = "Endpoint that modifies the cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart items Not Found")
-    public ResponseEntity<CartResponse> modifyCart(@Valid @RequestBody CartItemRequest request) {
-        // a method to call the service to modify the cart items.
-
-        //return a fake status
-        return ResponseEntity.ok(CartResponse.builder().build());
+    public ResponseEntity<CartItemResponse> updateCartItem(@Valid @RequestBody CartItemRequest request) {
+        return ResponseEntity.ok(cartService.updateCartItem(request));
     }
 
 

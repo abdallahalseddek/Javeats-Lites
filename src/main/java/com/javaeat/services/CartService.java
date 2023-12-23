@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface CartService {
     CartResponse addItemToCart(CartItemRequest itemRequest);
-    CartResponse updateCartItem(CartItemRequest itemRequest);
+    CartItemResponse updateCartItem(CartItemRequest itemRequest);
     void removeItem(Integer itemId);
     void removeAllCartItems(CartRequest request);
 

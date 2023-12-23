@@ -51,8 +51,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartResponse updateCartItem(CartItemRequest itemRequest) {
-        return null;
+    public CartItemResponse updateCartItem(CartItemRequest itemRequest) {
+        var item = cartItemRepository.findById(itemRequest.getId())
+                .orElseThrow(()->new EntityNotFoundException("Not Found Item"));
+        item.setQuantity(itemRequest.getQuantity());
+        item.setTotalPrice(item.getQuantity()*itemRequest.getUnitPrice());
+        cartItemRepository.save(item);
+        return mapToResponse(item);
     }
 
     @Override
