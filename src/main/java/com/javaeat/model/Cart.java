@@ -34,7 +34,7 @@ public class Cart {
     @Column(name = "discount")
     private Double discount;
     @OneToMany(mappedBy = "cart",cascade = CascadeType.MERGE , fetch = FetchType.EAGER)
-    List<CartItem> cartItems;
+    private List<CartItem> cartItems;
     @OneToOne
     @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
     private Customer customer;

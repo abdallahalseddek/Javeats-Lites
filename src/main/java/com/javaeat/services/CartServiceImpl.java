@@ -9,6 +9,7 @@ import com.javaeat.request.CartItemRequest;
 import com.javaeat.request.CartRequest;
 import com.javaeat.response.CartItemResponse;
 import com.javaeat.response.CartResponse;
+import com.javaeat.response.CartStatusResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,7 @@ public class CartServiceImpl implements CartService {
     private final ModelMapper mapper;
 
     @Bean
-    void init(){
+    void init() {
         // for development phase until implement the customer logic
         // when signup a customer, automatically cart is created
         Cart cart = new Cart();
@@ -36,10 +37,11 @@ public class CartServiceImpl implements CartService {
         cart.setStatus(CartStatus.READ_WRITE);
         cartRepository.save(cart);
     }
+
     @Override
     public CartResponse addItemToCart(CartItemRequest itemRequest) {
         var cart = cartRepository.findById(itemRequest.getCartId())
-                .orElseThrow(()-> new EntityNotFoundException("Cart not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
         CartItem cartItem = mapToEntity(itemRequest);
         cartItem.setCart(cart);
         cartItem.setTotalPrice(cartItem.getQuantity() * cartItem.getUnitPrice());
@@ -53,17 +55,17 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartItemResponse updateCartItem(CartItemRequest itemRequest) {
         var item = cartItemRepository.findById(itemRequest.getId())
-                .orElseThrow(()->new EntityNotFoundException("Not Found Item"));
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Item"));
         item.setQuantity(itemRequest.getQuantity());
-        item.setTotalPrice(item.getQuantity()*itemRequest.getUnitPrice());
+        item.setTotalPrice(item.getQuantity() * itemRequest.getUnitPrice());
         cartItemRepository.save(item);
         return mapToResponse(item);
     }
 
     @Override
     public void removeItem(Integer itemId) {
-       var item = cartItemRepository.findById(itemId)
-                .orElseThrow(()-> new EntityNotFoundException("Not Found Item"));
+        var item = cartItemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Item"));
         cartItemRepository.delete(item);
     }
 
@@ -75,7 +77,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartItemResponse> listAllCartItems(Integer cartId) {
         var cart = cartRepository.findById(cartId)
-                .orElseThrow(()->new EntityNotFoundException("Not Found Entity"));
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Entity"));
         return cart.getCartItems()
                 .stream()
                 .map(this::mapToResponse)
@@ -84,6 +86,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse checkCustomerHasCart(Integer customerId) {
+        return null;
+    }
+
+    @Override
+    public CartStatusResponse getCartStatus(Integer cartId) {
+        var cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
+        return mapper.map(cart,CartStatusResponse.class);
+    }
+
+    @Override
+    public CartResponse updateCartStatus(Integer cartId, CartStatus status) {
         return null;
     }
 

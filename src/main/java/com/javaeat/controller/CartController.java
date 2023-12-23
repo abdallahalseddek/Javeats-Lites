@@ -40,10 +40,7 @@ public class CartController {
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
     public ResponseEntity<CartStatusResponse> getCartStatus(@PathVariable Integer cartId) {
-        // a method to call the service to get the status
-
-        //return a fake status
-        return ResponseEntity.ok(CartStatusResponse.builder().cartId(cartId).cartStatus(CartStatus.READ_ONLY).build());
+        return ResponseEntity.ok(cartService.getCartStatus(cartId));
     }
 
     @PutMapping("/status")

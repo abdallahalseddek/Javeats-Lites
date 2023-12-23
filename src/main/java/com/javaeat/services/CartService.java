@@ -1,11 +1,13 @@
 package com.javaeat.services;
 
+import com.javaeat.enums.CartStatus;
 import com.javaeat.model.Cart;
 import com.javaeat.model.CartItem;
 import com.javaeat.request.CartItemRequest;
 import com.javaeat.request.CartRequest;
 import com.javaeat.response.CartItemResponse;
 import com.javaeat.response.CartResponse;
+import com.javaeat.response.CartStatusResponse;
 
 import java.util.List;
 
@@ -18,6 +20,8 @@ public interface CartService {
     List<CartItemResponse> listAllCartItems(Integer cartId);
     CartResponse checkCustomerHasCart(Integer customerId);
 
+    CartStatusResponse getCartStatus(Integer cartId);
+    CartResponse updateCartStatus(Integer cartId, CartStatus status);
     // TODO: validate items availability method
 
     // TODO: move to checkout endpoint

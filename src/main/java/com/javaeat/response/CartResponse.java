@@ -18,6 +18,6 @@ public class CartResponse implements Serializable {
 
     private Integer cartId;
     private List<CartItemResponse> items;
-    private CartStatus cartStatus= CartStatus.READ_WRITE;
+    private CartStatus cartStatus;
 
 }
