@@ -33,7 +33,7 @@ public class Cart {
     private CartStatus status;
     @Column(name = "discount")
     private Double discount;
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.MERGE , fetch = FetchType.EAGER)
     List<CartItem> cartItems;
     @OneToOne
     @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
