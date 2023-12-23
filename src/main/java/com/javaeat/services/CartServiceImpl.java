@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -67,8 +68,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartItemResponse> listAllCartItems(CartRequest request) {
-        return null;
+    public List<CartItemResponse> listAllCartItems(Integer cartId) {
+        var cart = cartRepository.findById(cartId)
+                .orElseThrow(()->new EntityNotFoundException("Not Found Entity"));
+        return cart.getCartItems()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

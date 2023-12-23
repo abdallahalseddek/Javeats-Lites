@@ -2,10 +2,7 @@ package com.javaeat.controller;
 
 import com.javaeat.enums.CartStatus;
 import com.javaeat.request.CartItemRequest;
-import com.javaeat.response.CartResponse;
-import com.javaeat.response.CartStatusResponse;
-import com.javaeat.response.DeleteCartResponse;
-import com.javaeat.response.ItemsAvailabilityResponse;
+import com.javaeat.response.*;
 import com.javaeat.services.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,6 +24,15 @@ import java.util.List;
 @AllArgsConstructor
 public class CartController {
     private final CartService cartService;
+
+    @GetMapping("/list/all/{cartId}")
+    @Operation(summary = "Endpoint that list all items in the cart",
+            description = "Endpoint that list all items in the cart")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
+    public ResponseEntity<List<CartItemResponse>> browseCart(@PathVariable Integer cartId) {
+        return ResponseEntity.ok(cartService.listAllCartItems(cartId));
+    }
 
     @GetMapping("/status/{cartId}")
     @Operation(summary = "Endpoint that checks cart status",

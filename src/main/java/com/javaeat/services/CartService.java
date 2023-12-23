@@ -15,7 +15,7 @@ public interface CartService {
     void removeItem(Integer itemId);
     void removeAllCartItems(CartRequest request);
 
-    List<CartItemResponse> listAllCartItems(CartRequest request);
+    List<CartItemResponse> listAllCartItems(Integer cartId);
     CartResponse checkCustomerHasCart(Integer customerId);
 
     // TODO: validate items availability method

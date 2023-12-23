@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class CartItemResponse {
     private Integer itemId;
     private Integer quantity;
+    private Double unitPrice;
 }
