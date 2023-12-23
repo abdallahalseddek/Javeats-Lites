@@ -30,6 +30,7 @@ public class Cart {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     @Column(name = "cart_status")
+    @Enumerated(EnumType.STRING)
     private CartStatus status;
     @Column(name = "discount")
     private Double discount;

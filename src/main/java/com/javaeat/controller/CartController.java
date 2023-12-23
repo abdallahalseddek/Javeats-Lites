@@ -48,11 +48,9 @@ public class CartController {
             description = "Endpoint that updates the current status of the shopping cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
-    public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId, @RequestParam CartStatus  newStatus) {
-        // a method to call the service to get the status
-
-        //return a fake status
-        return ResponseEntity.ok(CartStatusResponse.builder().cartId(cartId).cartStatus(newStatus).build());
+    public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId,
+                                                               @RequestParam CartStatus  newStatus) {
+        return ResponseEntity.ok(cartService.updateCartStatus(cartId,newStatus));
     }
 
     @PostMapping("/item-availability")

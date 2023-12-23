@@ -11,12 +11,14 @@ import com.javaeat.response.CartItemResponse;
 import com.javaeat.response.CartResponse;
 import com.javaeat.response.CartStatusResponse;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.EnumUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,12 +95,22 @@ public class CartServiceImpl implements CartService {
     public CartStatusResponse getCartStatus(Integer cartId) {
         var cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
-        return mapper.map(cart,CartStatusResponse.class);
+        return mapper.map(cart, CartStatusResponse.class);
     }
 
     @Override
-    public CartResponse updateCartStatus(Integer cartId, CartStatus status) {
-        return null;
+    public CartStatusResponse updateCartStatus(Integer cartId, CartStatus status) {
+
+        var cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
+
+        // TODO: handle invalid given status
+
+        cart.setUpdatedAt(LocalDateTime.now());
+        cart.setStatus(status);
+        var savedCart = cartRepository.save(cart);
+
+        return mapper.map(savedCart, CartStatusResponse.class);
     }
 
     @Override

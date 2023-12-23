@@ -21,7 +21,7 @@ public interface CartService {
     CartResponse checkCustomerHasCart(Integer customerId);
 
     CartStatusResponse getCartStatus(Integer cartId);
-    CartResponse updateCartStatus(Integer cartId, CartStatus status);
+    CartStatusResponse updateCartStatus(Integer cartId, CartStatus status);
     // TODO: validate items availability method
 
     // TODO: move to checkout endpoint
