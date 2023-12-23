@@ -76,16 +76,14 @@ public class CartController {
     }
 
 
-    @DeleteMapping("/clear/{cartId}")
-    @Operation(summary = "Endpoint that cancel order.",
-            description = "Endpoint that cancel the order.")
+    @DeleteMapping("/remove/{itemId}")
+    @Operation(summary = "Endpoint that delete cart item ",
+            description = "Endpoint that delete cart item")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
-    @ApiResponse(responseCode = "404", description = "Order Not Found Exception")
-    public ResponseEntity<DeleteCartResponse> cancelOrder(@PathVariable Integer cartId) {
-        // a method to call the service to delete the order
-
-        //return a fake status
-        return ResponseEntity.ok(DeleteCartResponse.builder().cartId(cartId).isDeleted(Boolean.FALSE).note("Cart status is READ_ONLY, cannot clear it.").build());
+    @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
+    public ResponseEntity<String> deleteCartItem(@PathVariable Integer itemId) {
+        cartService.removeItem(itemId);
+        return ResponseEntity.ok("Item Deleted successfully");
     }
 
     @PostMapping("/additem")

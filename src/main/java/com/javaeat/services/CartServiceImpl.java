@@ -1,6 +1,5 @@
 package com.javaeat.services;
 
-import com.javaeat.enums.CartStatus;
 import com.javaeat.model.Cart;
 import com.javaeat.model.CartItem;
 import com.javaeat.repository.CartItemRepository;
@@ -13,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,6 +20,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ModelMapper mapper;
+
     @Override
     public CartResponse addItemToCart(CartItemRequest itemRequest) {
         // TODO: check the customer existence and so the cart
@@ -33,7 +32,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void removeItem(CartItemRequest itemRequest) {
+    public void removeItem(Integer itemId) {
+        if (cartItemRepository.findById(itemId).isEmpty()) {
+            throw new IllegalStateException("Not Found Item");
+        }
+        cartItemRepository.deleteById(itemId);
     }
 
     @Override
