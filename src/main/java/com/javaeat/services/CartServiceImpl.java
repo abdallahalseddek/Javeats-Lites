@@ -1,5 +1,6 @@
 package com.javaeat.services;
 
+import com.javaeat.enums.CartStatus;
 import com.javaeat.model.Cart;
 import com.javaeat.model.CartItem;
 import com.javaeat.repository.CartItemRepository;
@@ -10,8 +11,11 @@ import com.javaeat.response.CartItemResponse;
 import com.javaeat.response.CartResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,14 +25,28 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ModelMapper mapper;
 
+    @Bean
+    void init(){
+        // for development phase until implement the customer logic
+        // when signup a customer, automatically cart is created
+        Cart cart = new Cart();
+        cart.setCreatedAt(LocalDateTime.now());
+        cart.setUpdatedAt(LocalDateTime.now());
+        cart.setStatus(CartStatus.READ_WRITE);
+        cartRepository.save(cart);
+    }
     @Override
     public CartResponse addItemToCart(CartItemRequest itemRequest) {
-        // TODO: check the customer existence and so the cart
-        // TODO: load the targeted cart to assign the items to it & update its attributes
+        var cart = cartRepository.findById(itemRequest.getCartId())
+                .orElseThrow(()-> new EntityNotFoundException("Cart not found"));
         CartItem cartItem = mapToEntity(itemRequest);
+        cartItem.setCart(cart);
         cartItem.setTotalPrice(cartItem.getQuantity() * cartItem.getUnitPrice());
-        CartItem savedItem = cartItemRepository.save(cartItem);
-        return mapToResponse(savedItem.getCart());
+        cart.getCartItems().add(cartItem);
+        cart.setUpdatedAt(LocalDateTime.now());
+        cartRepository.save(cart);
+        return mapToResponse(cart);
+        // TODO: exception of exist item in the cart
     }
 
     @Override
@@ -45,7 +63,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartResponse> listAllCartItems(CartRequest request) {
+    public List<CartItemResponse> listAllCartItems(CartRequest request) {
         return null;
     }
 
