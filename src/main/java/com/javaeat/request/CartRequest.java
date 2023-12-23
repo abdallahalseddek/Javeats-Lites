@@ -21,5 +21,5 @@ public class CartRequest {
     private LocalDateTime updatedAt;
     private CartStatus status;
     private Double discount;
-    List<CartItem> cartItems;
+    //List<CartItem> cartItems;
 }

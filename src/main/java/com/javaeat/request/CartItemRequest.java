@@ -11,9 +11,6 @@ public class CartItemRequest {
     private Integer id;
     private Integer quantity;
     private Double unitPrice;
-    private Double totalPrice;
-
-    // Include cart information
-    private Long cartId;
-
+    private Integer cartId;
+    // TODO: customer id
 }

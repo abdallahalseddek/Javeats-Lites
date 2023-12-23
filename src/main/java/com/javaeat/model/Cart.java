@@ -33,31 +33,8 @@ public class Cart {
     private CartStatus status;
     @Column(name = "discount")
     private Double discount;
-
-
-
-
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     List<CartItem> cartItems;
 
-    public void addCartItem(CartItem cartItem) {
-        if(!this.cartItems.contains(cartItem)) {
-            this.cartItems.add(cartItem);
-            this.totalPrice+= cartItem.getUnitPrice();
-
-            cartItem.setCart(this); // Set the reference to the Cart on the CartItem side
-
-        }
-
-    }
-
-    public void removeCartItem(CartItem cartItem){
-        if(cartItems.contains(cartItem)){
-            cartItems.remove(cartItem);
-            cartItem.setCart(this); // Set the reference to the Cart on the CartItem side
-
-        }
-
-    }
     // TODO: add @OneToOne customer
 }

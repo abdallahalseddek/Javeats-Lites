@@ -1,21 +1,22 @@
 package com.javaeat.controller;
 
 import com.javaeat.enums.CartStatus;
-import com.javaeat.model.CartItem;
 import com.javaeat.request.CartItemRequest;
-import com.javaeat.request.CartItemsRequest;
-import com.javaeat.response.*;
-import com.javaeat.services.CartItemService;
+import com.javaeat.response.CartResponse;
+import com.javaeat.response.CartStatusResponse;
+import com.javaeat.response.DeleteCartResponse;
+import com.javaeat.response.ItemsAvailabilityResponse;
 import com.javaeat.services.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,14 +24,9 @@ import java.util.List;
 @RequestMapping("api/cart")
 @Slf4j
 @Tag(name = "Cart Endpoints")
+@AllArgsConstructor
 public class CartController {
-    private  CartService cartService;
-    private  CartItemService cartItemService;
-    @Autowired
-    public CartController(CartService cartService, CartItemService cartItemService) {
-        this.cartService = cartService;
-        this.cartItemService=cartItemService;
-    }
+    private final CartService cartService;
 
     @GetMapping("/status/{cartId}")
     @Operation(summary = "Endpoint that checks cart status",
@@ -72,7 +68,7 @@ public class CartController {
             description = "Endpoint that modifies the cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart items Not Found")
-    public ResponseEntity<CartResponse> modifyCart(@Valid @RequestBody CartItemsRequest request) {
+    public ResponseEntity<CartResponse> modifyCart(@Valid @RequestBody CartItemRequest request) {
         // a method to call the service to modify the cart items.
 
         //return a fake status
@@ -99,12 +95,8 @@ public class CartController {
     @ApiResponse(responseCode = "400", description = "Bad request. Invalid input data")
     @ApiResponse(responseCode = "404", description = "Customer not found or Item not Found")
     @ApiResponse(responseCode = "500", description = "Internal server error. Something went wrong")
-    ResponseEntity<String> addToCart(@RequestBody CartItemRequest cartItemRequest) {
-        CartItem cartItem = cartItemService.mapToEntity(cartItemRequest);
-        cartService.processCartItem(cartItem, Math.toIntExact(cartItemRequest.getCartId()));
-
-        return ResponseEntity.ok("added a new item successfully in cart");
-
+    ResponseEntity<CartResponse> addToCart(@RequestBody CartItemRequest request) {
+        return ResponseEntity.ok(cartService.addItemToCart(request));
     }
 
 }
