@@ -50,11 +50,15 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public CartResponse updateCartItem(CartItemRequest itemRequest) {
+        return null;
+    }
+
+    @Override
     public void removeItem(Integer itemId) {
-        if (cartItemRepository.findById(itemId).isEmpty()) {
-            throw new IllegalStateException("Not Found Item");
-        }
-        cartItemRepository.deleteById(itemId);
+       var item = cartItemRepository.findById(itemId)
+                .orElseThrow(()-> new EntityNotFoundException("Not Found Item"));
+        cartItemRepository.delete(item);
     }
 
     @Override
