@@ -1,6 +1,7 @@
-package com.javaeat.request;
+package com.javaeat.response;
 
 import com.javaeat.enums.OrderStatus;
+import com.javaeat.request.CartItemRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class JavaEatApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(JavaEatApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(JavaEatApplication.class, args);
+    }
 
 
 }

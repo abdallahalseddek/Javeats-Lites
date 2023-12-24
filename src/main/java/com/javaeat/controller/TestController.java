@@ -8,7 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -27,6 +30,6 @@ public class TestController {
     @ApiResponse(responseCode = "500", description = "Server Error")
     public ResponseEntity<TestResponse> testEndpoint1(@Valid @RequestBody TestRequest request) {
         log.info("test endpoint 1");
-        return ResponseEntity.ok(TestResponse.builder().num1(request.getNum1()).num2(request.getNum2()).sum(request.getNum1()+ request.getNum2()).build());
+        return ResponseEntity.ok(TestResponse.builder().num1(request.getNum1()).num2(request.getNum2()).sum(request.getNum1() + request.getNum2()).build());
     }
 }

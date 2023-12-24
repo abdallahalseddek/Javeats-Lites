@@ -7,18 +7,14 @@ import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.request.CartItemRequest;
 import com.javaeat.request.CartRequest;
-import com.javaeat.response.CartItemResponse;
-import com.javaeat.response.CartResponse;
-import com.javaeat.response.CartStatusResponse;
+import com.javaeat.response.*;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.EnumUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,10 +61,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void removeItem(Integer itemId) {
+    public DeleteCartResponse removeItem(Integer itemId) {
         var item = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Item"));
         cartItemRepository.delete(item);
+        DeleteCartResponse response = mapper.map(item, DeleteCartResponse.class);
+        response.setIsDeleted(true);
+        response.setNote("Item with Id '" + itemId + "' is deleted successfully");
+        return response;
     }
 
     @Override
@@ -111,6 +111,16 @@ public class CartServiceImpl implements CartService {
         var savedCart = cartRepository.save(cart);
 
         return mapper.map(savedCart, CartStatusResponse.class);
+    }
+
+    @Override
+    public ItemAvailabilityResponse checkItemAvailable(Integer itemId) {
+        return null;
+    }
+
+    @Override
+    public void moveToCheckout(Integer cartId) {
+
     }
 
     @Override

@@ -49,19 +49,19 @@ public class CartController {
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
     public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId,
-                                                               @RequestParam CartStatus  newStatus) {
-        return ResponseEntity.ok(cartService.updateCartStatus(cartId,newStatus));
+                                                               @RequestParam CartStatus newStatus) {
+        return ResponseEntity.ok(cartService.updateCartStatus(cartId, newStatus));
     }
 
     @PostMapping("/item-availability")
     @Operation(summary = "Endpoint that checks the availability of items.",
             description = "Endpoint that checks the availability of items.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
-    public ResponseEntity<ItemsAvailabilityResponse> checkItemsAvailability(@Valid @RequestBody List<Integer> itemsIds) {
+    public ResponseEntity<ItemAvailabilityResponse> checkItemAvailability(@Valid @RequestBody Integer itemsId) {
         // a method to call the service to check Items Availability in the stock.
 
         //return a fake status
-        return ResponseEntity.ok(ItemsAvailabilityResponse.builder().build());
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/update")
@@ -79,9 +79,8 @@ public class CartController {
             description = "Endpoint that delete cart item")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
-    public ResponseEntity<String> deleteCartItem(@PathVariable Integer itemId) {
-        cartService.removeItem(itemId);
-        return ResponseEntity.ok("Item Deleted successfully");
+    public ResponseEntity<DeleteCartResponse> deleteCartItem(@PathVariable Integer itemId) {
+        return ResponseEntity.ok(cartService.removeItem(itemId));
     }
 
     @PostMapping("/additem")

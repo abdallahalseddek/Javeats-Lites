@@ -1,12 +1,13 @@
 package com.javaeat.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javaeat.enums.CartStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -34,10 +35,10 @@ public class Cart {
     private CartStatus status;
     @Column(name = "discount")
     private Double discount;
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.MERGE , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<CartItem> cartItems;
     @OneToOne
-    @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
     // TODO: add @OneToOne customer
 }

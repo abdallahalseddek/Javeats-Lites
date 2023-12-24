@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderStatusResponse  implements Serializable {
+public class OrderStatusResponse implements Serializable {
     private static final long serialVersionUID = -8122049585335550616L;
 
     private Integer orderId;

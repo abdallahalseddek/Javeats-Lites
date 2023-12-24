@@ -1,6 +1,9 @@
 package com.javaeat.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -21,11 +24,9 @@ public class CartItem {
     private Double unitPrice;
     @Column(name = "total_price")
     private Double totalPrice;
-    @ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
     private Cart cart;
-
-
 
 
 //TODO: add menu item id
