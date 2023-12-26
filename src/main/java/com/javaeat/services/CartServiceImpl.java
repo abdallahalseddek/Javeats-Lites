@@ -8,11 +8,9 @@ import com.javaeat.repository.CheckoutRepository;
 import com.javaeat.repository.CustomerRepository;
 import com.javaeat.request.CartItemRequest;
 import com.javaeat.request.CartRequest;
-import com.javaeat.response.CartItemResponse;
-import com.javaeat.response.CartResponse;
+import com.javaeat.response.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
@@ -21,19 +19,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-@Transactional
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ModelMapper mapper;
     private CheckoutRepository checkoutRepository;
     private CustomerRepository customerRepository;
+
     @PostConstruct
-    void init(){
+    void init() {
         // for development phase until implement the customer logic
         // when signup a customer, automatically cart is created
         Cart cart = new Cart();
@@ -42,11 +41,11 @@ public class CartServiceImpl implements CartService {
         address.setState("CA");
         address.setGovernment("City");
         address.setContactNumber("555-1234");
-        List<Address> addresses  =new ArrayList<>();
+        List<Address> addresses = new ArrayList<>();
         addresses.add(address);
 
 
-        Customer customer =new Customer();
+        Customer customer = new Customer();
         customer.setCart(cart);
         customer.setAddresses(addresses);
 
@@ -60,12 +59,13 @@ public class CartServiceImpl implements CartService {
 
 
         customerRepository.save(customer);
-    }git
+    }
+
     @Override
     public CartResponse addItemToCart(CartItemRequest cartItemRequest) {
         Cart cart = cartRepository.findById(cartItemRequest.getCartId())
-                .orElseThrow(()-> new EntityNotFoundException("Cart not found"));
-        CartItem cartItem = mapToEntity(cartItemRequest) ;
+                .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+        CartItem cartItem = mapToEntity(cartItemRequest);
         cartItem.setTotalPrice(cartItem.getQuantity() * cartItem.getUnitPrice());
         cart.setUpdatedAt(LocalDateTime.now());
         if (cart.getStatus() == CartStatus.READ_WRITE) {
@@ -82,6 +82,7 @@ public class CartServiceImpl implements CartService {
             // Save the updated cart
             cartRepository.save(cart);
         }
+
         return mapToResponse(cart);
         // TODO: exception of exist item in the cart
     }
@@ -89,46 +90,19 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartItemResponse updateCartItem(CartItemRequest itemRequest) {
         var item = cartItemRepository.findById(itemRequest.getId())
-                .orElseThrow(()->new EntityNotFoundException("Not Found Item"));
+
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Item"));
         item.setQuantity(itemRequest.getQuantity());
-        item.setTotalPrice(item.getQuantity()*itemRequest.getUnitPrice());
+        item.setTotalPrice(item.getQuantity() * itemRequest.getUnitPrice());
         cartItemRepository.save(item);
         return mapToResponse(item);
     }
 
-    @Override
-    public void removeItem(Integer itemId) {
-       var item = cartItemRepository.findById(itemId)
-                .orElseThrow(()-> new EntityNotFoundException("Not Found Item"));
-        cartItemRepository.delete(item);
-    }
 
-
-
-    @Override
-    public void removeAllCartItems(Integer cartId) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(()-> new EntityNotFoundException("Cart not found"));
-        cartItemRepository.deleteAll(cart.getCartItems());
-        cart.getCartItems().clear();
-        cartRepository.save(cart);
-    }
-
-    @Override
-    public List<CartItemResponse> listAllCartItems(Integer cartId) {
-        var cart = cartRepository.findById(cartId)
-                .orElseThrow(()->new EntityNotFoundException("Not Found Entity"));
-        return cart.getCartItems()
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
-
-
-    public void moveItemsToCheckout(CartRequest request) {
+    public void moveItemsToCheckout (CartRequest request, Integer cartId){
         Cart cart = mapToEntity(request);
-        cart= cartRepository.findById(cart.getId())
-                     .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+        cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
         // Create a new checkout entity and copy relevant information
         Checkout checkout = new Checkout();
         checkout.setCustomer(cart.getCustomer()); // Assuming a user is associated with the cart
@@ -146,9 +120,62 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-
     @Override
     public CartResponse checkCustomerHasCart(Integer customerId) {
+        return null;
+    }
+
+
+    public DeleteCartResponse removeItem(Integer itemId){
+        var item = cartItemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Item"));
+        cartItemRepository.delete(item);
+        DeleteCartResponse response = mapper.map(item, DeleteCartResponse.class);
+        response.setIsDeleted(true);
+        response.setNote("Item with Id '" + itemId + "' is deleted successfully");
+        return response;
+    }
+    @Override
+    public List<CartItemResponse> listAllCartItems(Integer cartId) {
+        var cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Entity"));
+        return cart.getCartItems()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public void removeAllCartItems(Integer cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+        cartItemRepository.deleteAll(cart.getCartItems());
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
+
+    }
+    @Override
+    public CartStatusResponse getCartStatus (Integer cartId){
+        var cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
+        return mapper.map(cart, CartStatusResponse.class);
+    }
+
+    @Override
+    public CartStatusResponse updateCartStatus (Integer cartId, CartStatus status){
+
+        var cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
+
+        // TODO: handle invalid given status
+
+        cart.setUpdatedAt(LocalDateTime.now());
+        cart.setStatus(status);
+        var savedCart = cartRepository.save(cart);
+
+        return mapper.map(savedCart, CartStatusResponse.class);
+    }
+    @Override
+    public ItemAvailabilityResponse checkItemAvailable(Integer itemId) {
         return null;
     }
 
@@ -181,5 +208,6 @@ public class CartServiceImpl implements CartService {
     public CartItemResponse mapToResponse(CartItem cartItem) {
         return mapper.map(cartItem, CartItemResponse.class);
     }
+
 }
 

@@ -20,4 +20,5 @@ public class CartResponse implements Serializable {
     private List<CartItemResponse> items;
     private CartStatus cartStatus= CartStatus.READ_WRITE;
 
+
 }

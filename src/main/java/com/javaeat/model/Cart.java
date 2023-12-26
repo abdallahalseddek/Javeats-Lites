@@ -1,12 +1,13 @@
 package com.javaeat.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javaeat.enums.CartStatus;
-import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.util.List;
 
 @Setter
@@ -22,26 +23,24 @@ public class Cart {
     @Column(name = "cart_id")
     private Integer id;
     @Column(name = "total_price")
-    private Double totalPrice =0.0;
+    private Double totalPrice = 0.0;
     @Column(name = "total_items")
-    private Integer totalItems=0 ;  // The count of items in the cart
+    private Integer totalItems = 0;  // The count of items in the cart
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     @Column(name = "cart_status")
+    @Enumerated(EnumType.STRING)
     private CartStatus status;
     @Column(name = "discount")
-    private Double discount=0.0;
+    private Double discount;
 
-
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
-    List<CartItem> cartItems;
-
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
-
-
+    // TODO: add @OneToOne customer
 
 }

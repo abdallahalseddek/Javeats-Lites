@@ -11,6 +11,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+      default_batch_fetch_size: 10
     show-sql: true
     properties:
       hibernate:

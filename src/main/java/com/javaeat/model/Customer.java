@@ -30,5 +30,4 @@ public class Customer {
     private List<Address> addresses = new ArrayList<>();
 
 
-    // To-Do add remaining attributes
 }

@@ -41,10 +41,7 @@ public class CartController {
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
     public ResponseEntity<CartStatusResponse> getCartStatus(@PathVariable Integer cartId) {
-        // a method to call the service to get the status
-
-        //return a fake status
-        return ResponseEntity.ok(CartStatusResponse.builder().cartId(cartId).cartStatus(CartStatus.READ_ONLY).build());
+        return ResponseEntity.ok(cartService.getCartStatus(cartId));
     }
 
     @PutMapping("/status")
@@ -52,22 +49,20 @@ public class CartController {
             description = "Endpoint that updates the current status of the shopping cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
-    public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId, @RequestParam CartStatus  newStatus) {
-        // a method to call the service to get the status
-
-        //return a fake status
-        return ResponseEntity.ok(CartStatusResponse.builder().cartId(cartId).cartStatus(newStatus).build());
+    public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId,
+                                                               @RequestParam CartStatus newStatus) {
+        return ResponseEntity.ok(cartService.updateCartStatus(cartId, newStatus));
     }
 
     @PostMapping("/item-availability")
     @Operation(summary = "Endpoint that checks the availability of items.",
             description = "Endpoint that checks the availability of items.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
-    public ResponseEntity<ItemsAvailabilityResponse> checkItemsAvailability(@Valid @RequestBody List<Integer> itemsIds) {
+    public ResponseEntity<ItemAvailabilityResponse> checkItemAvailability(@Valid @RequestBody Integer itemsId) {
         // a method to call the service to check Items Availability in the stock.
 
         //return a fake status
-        return ResponseEntity.ok(ItemsAvailabilityResponse.builder().build());
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/update")
@@ -85,9 +80,8 @@ public class CartController {
             description = "Endpoint that delete cart item")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
-    public ResponseEntity<String> deleteCartItem(@PathVariable Integer itemId) {
-        cartService.removeItem(itemId);
-        return ResponseEntity.ok("Item Deleted successfully");
+    public ResponseEntity<DeleteCartResponse> deleteCartItem(@PathVariable Integer itemId) {
+        return ResponseEntity.ok(cartService.removeItem(itemId));
     }
 
     @PostMapping("/additem")
@@ -111,9 +105,22 @@ public class CartController {
         return ResponseEntity.ok("all cart items of cart "+ cartId+ " Deleted successfully");
     }
 
-    @PostMapping("/move-to-checkout")
-    public ResponseEntity<String> moveToCheckout(@RequestBody CartRequest request) {
-        cartService.moveItemsToCheckout(request);
-        return ResponseEntity.ok("Items moved to checkout successfully.");
+    @PostMapping("/move-to-checkout/{cartId}")
+    @Operation(
+            summary = "Move items to checkout",
+            description = "Move specific items from the cart to the checkout",
+            tags = "Cart Operations"
+    )
+    @ApiResponse(responseCode = "200", description = "Items moved to checkout successfully")
+    @ApiResponse(responseCode = "404", description = "Cart or items not found")
+    public ResponseEntity<String> moveToCheckout(
+            @PathVariable Integer cartId,
+            @RequestBody CartRequest request) {
+
+        // Validate if the cartId is valid, you can throw a NotFoundException if not found
+        // cartService.validateCart(cartId);
+
+        cartService.moveItemsToCheckout( request, cartId);
+        return ResponseEntity.ok("Items moved to checkout successfully for cart " + cartId);
     }
 }

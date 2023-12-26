@@ -1,10 +1,8 @@
 package com.javaeat.controller;
 
-import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.OrderStatus;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
-import com.javaeat.response.CartStatusResponse;
 import com.javaeat.response.DeleteOrderResponse;
 import com.javaeat.response.OrderStatusResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,8 +80,6 @@ public class OrderController {
         //return a fake status
         return ResponseEntity.ok(OrderStatusResponse.builder().orderId(orderId).status(newStatus).build());
     }
-
-
 
 
 }
