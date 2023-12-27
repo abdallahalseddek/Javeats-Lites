@@ -29,7 +29,6 @@ public class Checkout {
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
-    // Fields related to the shipping address
     @Column(name = "shipping_street")
     private String shippingStreet;
 
@@ -41,9 +40,4 @@ public class Checkout {
 
     @Column(name = "shipping_contact_number")
     private String shippingContactNumber;
-
-
-
-    // Other checkout-related fields (e.g., shipping details, order date, etc.)
-
 }

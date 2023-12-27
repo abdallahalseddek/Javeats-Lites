@@ -26,8 +26,8 @@ public class Customer {
     @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
     private Cart cart;
 
-    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Address> addresses = new ArrayList<>();
+    @OneToMany( mappedBy = "customer")
+    private List<Address> addresses ;
 
 
 }

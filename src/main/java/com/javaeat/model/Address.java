@@ -28,6 +28,7 @@ public class Address {
 
     @Column(name = "contact_number")
     private String contactNumber;
-
-    // Constructors, getters, setters, and other methods as needed
+    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
+    private Customer customer;
 }
