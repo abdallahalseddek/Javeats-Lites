@@ -37,15 +37,6 @@ public class CartController {
         return ResponseEntity.ok(cartService.addItemToCart(request));
     }
 
-    @PatchMapping("/update")
-    @Operation(summary = "Endpoint that modifies cart.",
-            description = "Endpoint that modifies the cart.")
-    @ApiResponse(responseCode = "200", description = "Successful Operation")
-    @ApiResponse(responseCode = "404", description = "Cart items Not Found")
-    public ResponseEntity<CartItemResponse> updateCartItem(@Valid @RequestBody CartItemRequest request) {
-        return ResponseEntity.ok(cartService.updateCartItem(request));
-    }
-
     @DeleteMapping("/remove/{itemId}")
     @Operation(summary = "Endpoint that delete cart item ",
             description = "Endpoint that delete cart item")
