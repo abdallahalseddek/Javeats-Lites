@@ -26,43 +26,51 @@ import java.util.List;
 public class CartController {
     private final CartService cartService;
 
-    @PostMapping("/additem")
+    @PostMapping("/add/cartItem")
     @Operation(summary = "Add item to cart", description = "Add item to cart")
     @ApiResponse(responseCode = "201", description = "Successful operation",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)))
     @ApiResponse(responseCode = "400", description = "Bad request. Invalid input data")
     @ApiResponse(responseCode = "404", description = "Customer not found or Item not Found")
     @ApiResponse(responseCode = "500", description = "Internal server error. Something went wrong")
-    ResponseEntity<CartResponse> addToCart(@RequestBody CartItemRequest request) {
+    ResponseEntity<CartResponse> addItemToCart(@RequestBody CartItemRequest request) {
         return ResponseEntity.ok(cartService.addItemToCart(request));
     }
-
-    @DeleteMapping("/remove/{itemId}")
+    // /api/cart/update/cartItem
+    @PatchMapping("/update/cartItem")
+    @Operation(summary = "Endpoint that modifies cart.",
+            description = "Endpoint that modifies the cart.")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponse(responseCode = "404", description = "Cart items Not Found")
+    public ResponseEntity<CartItemResponse> updateCartItem(@Valid @RequestBody CartItemRequest cartItemRequest) {
+        return ResponseEntity.ok(cartService.updateCartItem(cartItemRequest));
+    }
+    @DeleteMapping("/delete/cartItem/{itemId}")
     @Operation(summary = "Endpoint that delete cart item ",
             description = "Endpoint that delete cart item")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
     public ResponseEntity<DeleteCartResponse> deleteCartItem(@PathVariable Integer itemId) {
-        return ResponseEntity.ok(cartService.removeItem(itemId));
+        return ResponseEntity.ok(cartService.deleteCartItem(itemId));
     }
 
-    @DeleteMapping("/removeall/{cartId}")
+    @DeleteMapping("/clear/{cartId}")
     @Operation(summary = "Endpoint that delete all cart items of specific cart ",
             description = "Endpoint that delete all cart items of specifc cart related to customer")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
-    public ResponseEntity<String> deleteAllCartItems(@PathVariable Integer cartId) {
-        cartService.removeAllCartItems(cartId);
+    public ResponseEntity<String> clearCart(@PathVariable Integer cartId) {
+        cartService.clearCart(cartId);
         return ResponseEntity.ok("all cart items of cart " + cartId + " Deleted successfully");
     }
 
-    @GetMapping("/list/all/{cartId}")
+    @GetMapping("/browse-cart/{cartId}")
     @Operation(summary = "Endpoint that list all items in the cart",
             description = "Endpoint that list all items in the cart")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
     public ResponseEntity<List<CartItemResponse>> browseCart(@PathVariable Integer cartId) {
-        return ResponseEntity.ok(cartService.listAllCartItems(cartId));
+        return ResponseEntity.ok(cartService.browseCart(cartId));
     }
 
     @GetMapping("/status/{cartId}")
@@ -92,14 +100,5 @@ public class CartController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/move-to-checkout")
-    @Operation(summary = "Move items to checkout",
-            description = "Move specific items from the cart to the checkout",
-            tags = "Cart Operations")
-    @ApiResponse(responseCode = "200", description = "Items moved to checkout successfully")
-    @ApiResponse(responseCode = "404", description = "Cart or items not found")
-    public ResponseEntity<String> moveToCheckout(@RequestBody CartRequest request) {
-        cartService.moveItemsToCheckout(request);
-        return ResponseEntity.ok("Items moved to checkout successfully for cart " + request.getId());
-    }
+
 }

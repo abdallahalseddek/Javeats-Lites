@@ -19,17 +19,15 @@ public class CartItem {
     @Column(name = "cart_item_id")
     private Integer id;
     @Column(name = "quantity")
-    private Integer quantity;
+    private Integer quantity=0;
     @Column(name = "unit_price")
     private Double unitPrice;
     @Column(name = "total_price")
-    private Double totalPrice;
+    private Double totalPrice=0.0;
     @ManyToOne
     @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
     private Cart cart;
-    @ManyToOne
-    @JoinColumn(name = "checkout_id", referencedColumnName = "checkout_id")
-    private Checkout checkout;
+
     public Double getTotalPrice() {
         return totalPrice != null ? totalPrice : 0.0;
     }

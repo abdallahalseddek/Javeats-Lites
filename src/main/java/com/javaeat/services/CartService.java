@@ -12,29 +12,19 @@ import java.util.List;
 public interface CartService {
     CartResponse addItemToCart(CartItemRequest itemRequest);
 
-    DeleteCartResponse removeItem(Integer itemId);
+    DeleteCartResponse deleteCartItem(Integer itemId);
 
-    void removeAllCartItems(Integer cartId);
-
-    List<CartItemResponse> listAllCartItems(Integer cartId);
-
-    void moveItemsToCheckout(CartRequest request);
+    void clearCart(Integer cartId);
+    CartItemResponse updateCartItem(CartItemRequest cartItemRequest);
+    List<CartItemResponse> browseCart(Integer cartId);
 
     CartStatusResponse getCartStatus(Integer cartId);
 
-    CartStatusResponse updateCartStatus(Integer cartId, CartStatus status);
+    CartStatusResponse updateCartStatus(Integer cartId, CartStatus newStatus);
 
-    ItemAvailabilityResponse checkItemAvailable(Integer itemId);
+    // CartStatusResponse updateCartStatus(Integer cartId, CartStatus status);
 
-    Cart mapToEntity(CartRequest request);
+   // ItemAvailabilityResponse checkItemAvailable(Integer itemId);
 
-    CartItem mapToEntity(CartItemRequest request);
 
-    CartRequest mapToRequest(Cart cart);
-
-    CartItemRequest mapToRequest(CartItem cartItem);
-
-    CartResponse mapToResponse(Cart cart);
-
-    CartItemResponse mapToResponse(CartItem cartItem);
 }
