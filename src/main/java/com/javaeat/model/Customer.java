@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 @AllArgsConstructor
-public class Customer {
+public class Customer  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,8 @@ public class Customer {
     @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
     private Cart cart;
 
-    @OneToMany( mappedBy = "customer")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_id")
     private List<Address> addresses ;
 
 

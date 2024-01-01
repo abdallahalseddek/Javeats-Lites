@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 @AllArgsConstructor
-public class Cart {
+public class Cart extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,6 @@ public class Cart {
     private Double totalPrice = 0.0;
     @Column(name = "total_items")
     private Integer totalItems = 0;  // The count of items in the cart
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
     @Column(name = "cart_status")
     @Enumerated(EnumType.STRING)
     private CartStatus status;

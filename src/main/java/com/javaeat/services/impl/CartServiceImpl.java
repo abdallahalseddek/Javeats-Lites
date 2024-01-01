@@ -140,8 +140,6 @@ public class CartServiceImpl implements CartService {
         customer.setCart(cart);
         customer.setAddresses(addresses);
 
-        cart.setCreatedAt(LocalDateTime.now());
-        cart.setUpdatedAt(LocalDateTime.now());
         cart.setTotalPrice(0.0);
         cart.setStatus(CartStatus.READ_WRITE);
         cart.setTotalItems(0);

@@ -28,7 +28,6 @@ public class Address {
 
     @Column(name = "contact_number")
     private String contactNumber;
-    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
-    private Customer customer;
+
+
 }

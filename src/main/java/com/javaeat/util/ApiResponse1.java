@@ -38,7 +38,7 @@ public class ApiResponse1 {
         return new ResponseEntity<>(response, status);
     }
 
-    public static <T> ResponseEntity<ApiResponse1> createUnifiedResponse(Object body, HttpStatus status, String message) {
+    public static  ResponseEntity<ApiResponse1> createUnifiedResponse(Object body, HttpStatus status, String message) {
         return createUnifiedResponse(body, status, message, null);
     }
 }
