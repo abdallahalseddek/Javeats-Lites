@@ -27,12 +27,10 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
     private Cart cart;
+    @OneToOne(mappedBy = "cartItem")
+    private MenuItem menuItem;
 
     public Double getTotalPrice() {
         return totalPrice != null ? totalPrice : 0.0;
     }
-
-
-
-//TODO: add menu item id
 }

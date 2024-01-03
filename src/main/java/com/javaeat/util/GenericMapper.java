@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class Converter {
+public class GenericMapper {
     private final ModelMapper modelMapper;
 
-    public Converter(ModelMapper modelMapper) {
+    public GenericMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
