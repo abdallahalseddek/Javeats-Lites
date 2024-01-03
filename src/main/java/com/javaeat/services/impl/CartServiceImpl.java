@@ -10,6 +10,7 @@ import com.javaeat.repository.CustomerRepository;
 import com.javaeat.request.CartItemRequest;
 import com.javaeat.response.*;
 import com.javaeat.services.CartService;
+import com.javaeat.util.Converter;
 import com.javaeat.util.MapperUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -31,6 +32,7 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ModelMapper mapper;
     private final CustomerRepository customerRepository;
+    private final Converter converter;
 
     @Transactional
     @Override
@@ -45,7 +47,7 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem =new CartItem();
         updateCartDetails(cartItemRequest,cartItem, cart);
         cartRepository.save(cart);
-        return MapperUtil.mapToResponse(cart);
+        return converter.convert(cart,CartResponse.class);
     }
 
     @Transactional
@@ -57,7 +59,7 @@ public class CartServiceImpl implements CartService {
         cart = updateCartDetails(cartItemRequest, cartItem, cart);
         //save cart and with cascade save cart items
         cartRepository.save(cart);
-        return MapperUtil.mapToResponse(cartItem); // its not clear function
+        return converter.convert(cartItem,CartItemResponse.class); // its not clear function
     }
 
     @Transactional
@@ -86,14 +88,14 @@ public class CartServiceImpl implements CartService {
     public List<CartItemResponse> browseCart(Integer cartId) {
         var cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Entity"));
-        return MapperUtil.mapToCartItemsResponse(cart.getCartItems());
+        return converter.toList(cart.getCartItems(), CartItemResponse.class);
     }
 
     @Override
     public CartStatusResponse getCartStatus(Integer cartId) {
         var cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
-        return mapper.map(cart, CartStatusResponse.class);
+        return converter.convert(cart,CartStatusResponse.class);
     }
 
     @Override
