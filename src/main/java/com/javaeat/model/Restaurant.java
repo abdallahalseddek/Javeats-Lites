@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -22,5 +23,5 @@ public class Restaurant extends BaseEntity{
     @OneToOne(mappedBy = "restaurant")
     private RestaurantDetails restaurantDetails;
     @OneToMany(mappedBy = "restaurant")
-    private List<Menu> menus;
+    private List<Menu> menus = new ArrayList<>();
 }

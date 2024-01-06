@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -23,9 +24,9 @@ public class Menu extends BaseEntity{
     private String name;
     @Column(name = "description")
     private String description;
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id",referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
     @OneToMany(mappedBy = "menu")
-    private List<MenuItem> menuItems;
+    private List<MenuItem> menuItems=new ArrayList<>();
 }

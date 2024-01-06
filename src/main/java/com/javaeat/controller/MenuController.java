@@ -3,8 +3,9 @@ package com.javaeat.controller;
 
 import com.javaeat.request.MenuItemRequest;
 import com.javaeat.request.MenuRequest;
+import com.javaeat.response.MenuItemResponse;
+import com.javaeat.response.MenuResponse;
 import com.javaeat.services.MenuService;
-import com.javaeat.util.ApiResponse1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("api/menu")
@@ -25,34 +24,22 @@ public class MenuController {
 
     @PostMapping("/addMenu")
     @Operation(summary = "Add a new Menu", description = "Add a new Menu")
-    public ResponseEntity<ApiResponse1> addMenu(@RequestBody MenuRequest menuRequest) {
-        return ApiResponse1.createUnifiedResponse(
-                menuService.addMenu(menuRequest),
-                HttpStatus.CREATED, "Successful operation",
-                Arrays.asList("Bad request. Invalid input data",
-                        "Menu not found or Item not Found",
-                        "Internal server error. Something went wrong"));
+    public ResponseEntity<MenuResponse> addMenu(@RequestBody MenuRequest menuRequest) {
+        return new ResponseEntity<>(menuService.addMenu(menuRequest),HttpStatus.CREATED);
     }
 
-    @PatchMapping("/addMenuItem")
+    @PostMapping("/addMenuItem")
     @Operation(summary = "Add a new Menu Item", description = "Add a new Menu Item")
-    public ResponseEntity<ApiResponse1> addMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
-        return ApiResponse1.createUnifiedResponse(
-                menuService.addMenuItem(menuItemRequest),
-                HttpStatus.CREATED, "Successful operation",
-                Arrays.asList("Bad request. Invalid input data",
-                        "Menu Item Info not found or Item not Found",
-                        "Internal server error. Something went wrong"));
+    public ResponseEntity<MenuItemResponse> addMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
+        return new ResponseEntity<>(menuService.addMenuItem(menuItemRequest),HttpStatus.CREATED);
+
     }
 
     @PatchMapping("/updateMenuItem")
     @Operation(summary = "update Menu Item info", description = "update Menu Item info")
-    public ResponseEntity<ApiResponse1> updateMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
-        return ApiResponse1.createUnifiedResponse(
-                menuService.updateMenuItem(menuItemRequest),
-                HttpStatus.CREATED, "Successful operation", Arrays.asList("Bad request. Invalid input data",
-                        "Menu Item Info not found or Item not Found",
-                        "Internal server error. Something went wrong"));
+    public ResponseEntity<MenuItemResponse> updateMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
+        return new ResponseEntity<>(menuService.updateMenuItem(menuItemRequest),HttpStatus.ACCEPTED);
+
     }
 
     @DeleteMapping("/deleteMenu/{menuId}")

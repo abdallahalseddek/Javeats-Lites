@@ -1,6 +1,7 @@
 package com.javaeat.services;
 
 import com.javaeat.model.Menu;
+import com.javaeat.model.Restaurant;
 import com.javaeat.request.RestaurantRequest;
 import com.javaeat.response.RestaurantResponse;
 
@@ -16,4 +17,6 @@ public interface RestaurantService {
     RestaurantResponse getRestaurantRating(Integer restaurantId);
 
     void deleteRestaurant(Integer restaurantId);
+
+    Restaurant checkRestaurantExists(Integer RestaurantId);
 }

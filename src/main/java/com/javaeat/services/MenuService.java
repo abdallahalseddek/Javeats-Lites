@@ -1,11 +1,17 @@
 package com.javaeat.services;
 
+import com.javaeat.model.Menu;
+import com.javaeat.model.MenuItem;
 import com.javaeat.request.MenuItemRequest;
 import com.javaeat.request.MenuRequest;
 import com.javaeat.response.MenuItemResponse;
 import com.javaeat.response.MenuResponse;
 
 public interface MenuService {
+    Menu checkMenuExists(Integer menuId);
+
+    MenuItem checkMenuItemExists(Integer menuItemId);
+
     MenuResponse addMenu(MenuRequest menuRequest);
 
     MenuItemResponse addMenuItem(MenuItemRequest menuItemRequest);

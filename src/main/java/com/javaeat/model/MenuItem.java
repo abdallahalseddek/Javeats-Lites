@@ -24,7 +24,7 @@ public class MenuItem extends BaseEntity{
     private String ingredients;
     @Column(name = "price")
     private Double price;
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "menu_id",referencedColumnName = "menu_id")
     private Menu menu;
     @OneToOne

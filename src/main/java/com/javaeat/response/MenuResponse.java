@@ -1,6 +1,5 @@
 package com.javaeat.response;
 
-import com.javaeat.model.Restaurant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class MenuResponse {
     private Integer id;
     private String name;
     private String description;
-    private Restaurant restaurant;
+    private Integer restaurantId;
 
     // Base Entity Attributes
     private LocalDateTime creationTime;
