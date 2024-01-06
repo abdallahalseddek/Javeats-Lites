@@ -7,6 +7,8 @@ import com.javaeat.request.MenuRequest;
 import com.javaeat.response.MenuItemResponse;
 import com.javaeat.response.MenuResponse;
 
+import java.util.List;
+
 public interface MenuService {
     Menu checkMenuExists(Integer menuId);
 
@@ -23,6 +25,5 @@ public interface MenuService {
     void clearMenu(Integer menuId);
 
     void deleteMenuItem(Integer menuItemId);
-
-
+    List<MenuItemResponse> browseItemsInMenu(Integer menuId);
 }

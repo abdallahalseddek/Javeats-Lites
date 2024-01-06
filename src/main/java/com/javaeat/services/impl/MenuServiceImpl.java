@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -84,6 +85,13 @@ public class MenuServiceImpl implements MenuService {
     public void deleteMenuItem(Integer menuItemId) {
         MenuItem menuItem = checkMenuItemExists(menuItemId);
         menuItemRepository.delete(menuItem);
+    }
+
+    @Override
+    public List<MenuItemResponse> browseItemsInMenu(Integer menuId) {
+        checkMenuExists(menuId);
+        List<MenuItem> itemList = menuItemRepository.findAllByMenuId(menuId);
+        return mapper.toList(itemList,MenuItemResponse.class);
     }
 
     @Override

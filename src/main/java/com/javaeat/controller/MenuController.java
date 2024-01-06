@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/menu")
 @Slf4j
@@ -40,6 +42,11 @@ public class MenuController {
     public ResponseEntity<MenuItemResponse> updateMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
         return new ResponseEntity<>(menuService.updateMenuItem(menuItemRequest),HttpStatus.ACCEPTED);
 
+    }
+    @GetMapping("/findAll/{menuId}")
+    @Operation(summary = "list all Menu Items ", description = "list all Menu Items")
+    public ResponseEntity<List<MenuItemResponse>> browseItemsInMenu(@PathVariable Integer menuId) {
+        return new ResponseEntity<>(menuService.browseItemsInMenu(menuId),HttpStatus.FOUND);
     }
 
     @DeleteMapping("/deleteMenu/{menuId}")
