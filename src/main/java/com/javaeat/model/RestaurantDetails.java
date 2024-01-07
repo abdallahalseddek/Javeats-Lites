@@ -1,9 +1,6 @@
 package com.javaeat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Restaurant_Details")
 @AllArgsConstructor
+@Builder
 public class RestaurantDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

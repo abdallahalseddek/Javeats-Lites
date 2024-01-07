@@ -1,10 +1,7 @@
 package com.javaeat.response;
 
 import com.javaeat.model.Menu;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RestaurantResponse{
     private Integer id;
     private String name;
