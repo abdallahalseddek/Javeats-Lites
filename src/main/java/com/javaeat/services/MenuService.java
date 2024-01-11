@@ -4,26 +4,22 @@ import com.javaeat.model.Menu;
 import com.javaeat.model.MenuItem;
 import com.javaeat.request.MenuItemRequest;
 import com.javaeat.request.MenuRequest;
-import com.javaeat.response.MenuItemResponse;
-import com.javaeat.response.MenuResponse;
 
 import java.util.List;
 
 public interface MenuService {
-    Menu checkMenuExists(Integer menuId);
+    Menu addMenu(MenuRequest menuRequest);
 
-    MenuItem checkMenuItemExists(Integer menuItemId);
+    MenuItem addMenuItem(MenuItemRequest menuItemRequest);
 
-    MenuResponse addMenu(MenuRequest menuRequest);
-
-    MenuItemResponse addMenuItem(MenuItemRequest menuItemRequest);
-
-    MenuItemResponse updateMenuItem(MenuItemRequest menuItemRequest);
+    MenuItem updateMenuItem(MenuItemRequest menuItemRequest);
 
     void deleteMenu(Integer menuId);
 
     void clearMenu(Integer menuId);
 
     void deleteMenuItem(Integer menuItemId);
-    List<MenuItemResponse> browseItemsInMenu(Integer menuId);
+    List<MenuItem> browseItemsInMenu(Integer menuId);
+    List<Menu> browseAllRestaurantMenus(Integer restaurantId);
+
 }

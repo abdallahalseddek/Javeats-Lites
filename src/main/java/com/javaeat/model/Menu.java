@@ -1,10 +1,9 @@
 package com.javaeat.model;
 
+import com.javaeat.request.MenuRequest;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Setter
 @Getter
@@ -12,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "Menu")
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Builder
 public class Menu extends BaseEntity{
     @Id
@@ -22,9 +22,17 @@ public class Menu extends BaseEntity{
     private String name;
     @Column(name = "description")
     private String description;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "restaurant_id",referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
-    @OneToMany(mappedBy = "menu")
-    private List<MenuItem> menuItems=new ArrayList<>();
+    public static Menu menuBuilder(MenuRequest request){
+        Menu menu = Menu.builder()
+                .id(request.getId())
+                .name(request.getName())
+                .description(request.getDescription())
+                .build();
+        menu.setCreatedBy(request.getCreatedBy());
+        menu.setUpdatedBy(request.getUpdatedBy());
+        return menu;
+    }
 }

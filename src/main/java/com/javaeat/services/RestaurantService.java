@@ -1,22 +1,19 @@
 package com.javaeat.services;
 
-import com.javaeat.model.Menu;
 import com.javaeat.model.Restaurant;
 import com.javaeat.request.RestaurantRequest;
-import com.javaeat.response.RestaurantResponse;
 
 import java.util.List;
 
 public interface RestaurantService {
-    RestaurantResponse addNewRestaurant(RestaurantRequest restaurantRequest);
+    Restaurant addNewRestaurant(RestaurantRequest restaurantRequest);
 
-    RestaurantResponse updateRestaurant(RestaurantRequest restaurantRequest);
+    Restaurant updateRestaurant(RestaurantRequest restaurantRequest);
 
-    List<Menu> listAllRestaurantMenus(Integer restaurantId);
+    List<Restaurant> listAllRestaurants();
 
-    RestaurantResponse getRestaurantRating(Integer restaurantId);
+    Restaurant getRestaurantRating(Integer restaurantId);
 
     void deleteRestaurant(Integer restaurantId);
 
-    Restaurant checkRestaurantExists(Integer RestaurantId);
 }

@@ -4,10 +4,10 @@ import com.javaeat.enums.CartStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import com.javaeat.request.CartRequest;
+import lombok.*;
+
 import java.util.List;
 
 @Setter
@@ -16,6 +16,8 @@ import java.util.List;
 @Entity
 @Table(name = "cart")
 @AllArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
 public class Cart extends BaseEntity{
 
     @Id
@@ -23,9 +25,9 @@ public class Cart extends BaseEntity{
     @Column(name = "cart_id")
     private Integer id;
     @Column(name = "total_price")
-    private Double totalPrice = 0.0;
+    private Double totalPrice ;
     @Column(name = "total_items")
-    private Integer totalItems = 0;  // The count of items in the cart
+    private Integer totalItems;
     @Column(name = "cart_status")
     @Enumerated(EnumType.STRING)
     private CartStatus status;
@@ -38,6 +40,4 @@ public class Cart extends BaseEntity{
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
-    // TODO: add @OneToOne customer
-
 }

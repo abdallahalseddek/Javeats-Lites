@@ -1,5 +1,6 @@
 package com.javaeat.request;
 
+import com.javaeat.enums.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,12 +14,8 @@ public class RestaurantRequest {
     private Integer id;
     private String name;
     private String description;
-    private String contactDetails;
+    private Status status;
     private String location;
-
-    // Base Entity Attributes
-    private LocalDateTime creationTime;
-    private LocalDateTime lastUpdatedTime;
     private String createdBy;
     private String updatedBy;
 }

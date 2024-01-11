@@ -13,5 +13,4 @@ public class MenuItemResponse {
     private String ingredients;
     private Double price;
     private Integer menuId;
-    private Integer cartItem;
 }

@@ -4,22 +4,19 @@ import com.javaeat.enums.ErrorMessage;
 import com.javaeat.exception.NotFoundException;
 import com.javaeat.model.Menu;
 import com.javaeat.model.MenuItem;
+import com.javaeat.model.Restaurant;
 import com.javaeat.repository.MenuItemRepository;
 import com.javaeat.repository.MenuRepository;
 import com.javaeat.repository.RestaurantRepository;
 import com.javaeat.request.MenuItemRequest;
 import com.javaeat.request.MenuRequest;
-import com.javaeat.response.MenuItemResponse;
-import com.javaeat.response.MenuResponse;
 import com.javaeat.services.MenuService;
-import com.javaeat.util.GenericMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -28,47 +25,44 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuItemRepository menuItemRepository;
     private final RestaurantRepository restaurantRepository;
-    private final GenericMapper mapper;
+    private final LocalDateTime dateTime = LocalDateTime.now();
 
     @Transactional
     @Override
-    public MenuResponse addMenu(MenuRequest menuRequest) {
-        if (menuRepository.findById(menuRequest.getId()).isPresent()) {
-            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
-                    ErrorMessage.MENU_ALREADY_EXISTS.name());
-        }
-        Menu menu = mapper.convert(menuRequest, Menu.class);
-        Menu updatedMenu = setMenu(menuRequest, menu);
-        menuRepository.save(updatedMenu);
-        return mapper.convert(updatedMenu, MenuResponse.class);
+    public Menu addMenu(MenuRequest menuRequest) {
+        isMenuExists(menuRequest.getId());
+        Menu newMenu = Menu.menuBuilder(menuRequest);
+        Restaurant restaurant = restaurantRepository.findById(menuRequest.getRestaurantId()).get();
+        newMenu.setCreationTime(dateTime);
+        newMenu.setRestaurant(restaurant);
+        return menuRepository.save(newMenu);
     }
 
     @Transactional
     @Override
-    public MenuItemResponse addMenuItem(MenuItemRequest menuItemRequest) {
-        if (menuItemRepository.findById(menuItemRequest.getId()).isPresent()) {
-            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
-                    ErrorMessage.MENU_ITEM_ALREADY_EXISTS.name());
-        }
-        MenuItem menuItem = mapper.convert(menuItemRequest, MenuItem.class);
-        MenuItem updatedMenuItem = setMenuItem(menuItem, menuItemRequest);
-        MenuItem savedItem = menuItemRepository.save(updatedMenuItem);
-        return mapper.convert(savedItem, MenuItemResponse.class);
+    public MenuItem addMenuItem(MenuItemRequest menuItemRequest) {
+        isMenuItemExists(menuItemRequest.getId());
+        MenuItem newItem = MenuItem.itemBuilder(menuItemRequest);
+        Menu menu = menuRepository.findById(menuItemRequest.getMenuId()).get();
+        newItem.setMenu(menu);
+        return menuItemRepository.save(newItem);
     }
 
     @Transactional
     @Override
-    public MenuItemResponse updateMenuItem(MenuItemRequest menuItemRequest) {
-        MenuItem menuItem = checkMenuItemExists(menuItemRequest.getId());
-        MenuItem updatedMenuItem = setMenuItem(menuItem, menuItemRequest);
-        MenuItem savedItem = menuItemRepository.save(updatedMenuItem);
-        return mapper.convert(savedItem, MenuItemResponse.class);
+    public MenuItem updateMenuItem(MenuItemRequest menuItemRequest) {
+        Menu menu = menuRepository.findById(menuItemRequest.getMenuId()).get();
+        MenuItem updatedMenuItem = MenuItem.itemBuilder(menuItemRequest);
+        updatedMenuItem.setMenu(menu);
+        updatedMenuItem.setLastUpdatedTime(dateTime);
+        return menuItemRepository.save(updatedMenuItem);
     }
 
     @Transactional
     @Override
     public void clearMenu(Integer menuId) {
-        Menu menu = checkMenuExists(menuId);
+        isMenuNotExists(menuId);
+        Menu menu = menuRepository.findById(menuId).get();
         menuItemRepository.deleteMenuItemsByMenu(menu);
     }
 
@@ -76,66 +70,51 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public void deleteMenu(Integer menuId) {
         clearMenu(menuId);
-        Menu menu = checkMenuExists(menuId);
+        Menu menu = menuRepository.findById(menuId).get();
         menuRepository.delete(menu);
     }
 
     @Transactional
     @Override
     public void deleteMenuItem(Integer menuItemId) {
-        MenuItem menuItem = checkMenuItemExists(menuItemId);
+        isMenuItemNotExists(menuItemId);
+        MenuItem menuItem = menuItemRepository.findById(menuItemId).get();
         menuItemRepository.delete(menuItem);
     }
 
     @Override
-    public List<MenuItemResponse> browseItemsInMenu(Integer menuId) {
-        checkMenuExists(menuId);
-        List<MenuItem> itemList = menuItemRepository.findAllByMenuId(menuId);
-        return mapper.toList(itemList,MenuItemResponse.class);
+    public List<MenuItem> browseItemsInMenu(Integer menuId) {
+        isMenuNotExists(menuId);
+        return menuItemRepository.findAllByMenuId(menuId);
     }
 
     @Override
-    public MenuItem checkMenuItemExists(Integer menuItemId) {
-        return menuItemRepository
-                .findById(menuItemId).orElseThrow(() ->
-                        new NotFoundException(HttpStatus.NOT_FOUND.value()
-                                , ErrorMessage.MENU_ITEM_NOT_FOUND.name()));
+    public List<Menu> browseAllRestaurantMenus(Integer restaurantId) {
+        return menuRepository.findMenusByRestaurantId(restaurantId);
     }
 
-    @Override
-    public Menu checkMenuExists(Integer menuId) {
-        return menuRepository
-                .findById(menuId).orElseThrow(() ->
-                        new NotFoundException(HttpStatus.NOT_FOUND.value()
-                                , ErrorMessage.MENU_NOT_FOUND.name()));
+    public void isMenuItemExists(Integer menuItemId) {
+        if (menuItemRepository.findById(menuItemId).isPresent()) {
+            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
+                    ErrorMessage.MENU_ITEM_ALREADY_EXISTS.name());
+        }
     }
 
-    private Menu setMenu(MenuRequest menuRequest, Menu menu) {
-        menu.setId(menuRequest.getId());
-        menu.setName(menuRequest.getName());
-        menu.setDescription(menuRequest.getDescription());
-        menu.setRestaurant(restaurantRepository.
-                findById(menuRequest.getRestaurantId()).get());
-        menu.setMenuItems(Collections.emptyList());
-        menu.setCreatedBy(menuRequest.getCreatedBy());
-        menu.setUpdatedBy(menuRequest.getUpdatedBy());
-        menu.setCreationTime(LocalDateTime.now());
-        menu.setLastUpdatedTime(LocalDateTime.now());
-        return menu;
+    public void isMenuItemNotExists(Integer menuItemId) {
+        if (menuItemRepository.findById(menuItemId).isEmpty()) {
+            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
+                    ErrorMessage.MENU_ITEM_NOT_FOUND.name());}
+    }
+    public void isMenuExists(Integer menuId) {
+        if (menuRepository.findById(menuId).isPresent()) {
+            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
+                    ErrorMessage.MENU_ALREADY_EXISTS.name());
+        }
     }
 
-    private MenuItem setMenuItem(MenuItem menuItem, MenuItemRequest menuItemRequest) {
-        Menu menu = menuRepository.findById(menuItemRequest.getMenuId())
-                .orElseThrow(() ->
-                        new NotFoundException(HttpStatus.NOT_FOUND.value()
-                                , ErrorMessage.MENU_NOT_FOUND.name()));
-        menuItem.setMenu(menu);
-        menuItem.setTitle(menuItemRequest.getTitle());
-        menuItem.setIngredients(menuItemRequest.getIngredients());
-        menuItem.setPrice(menuItemRequest.getPrice());
-        menuItem.setCartItem(null);
-        menuItem.setCreatedBy(menu.getCreatedBy());
-        menuItem.setUpdatedBy(menu.getUpdatedBy());
-        return menuItem;
+    public void isMenuNotExists(Integer menuId) {
+        if (menuRepository.findById(menuId).isEmpty()) {
+            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
+                    ErrorMessage.MENU_NOT_FOUND.name());}
     }
 }

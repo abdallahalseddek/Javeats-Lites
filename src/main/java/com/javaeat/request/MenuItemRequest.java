@@ -14,4 +14,6 @@ public class MenuItemRequest{
     private Double price;
     private Integer menuId;
     private Integer cartItem;
+    private String createdBy;
+    private String updatedBy;
 }

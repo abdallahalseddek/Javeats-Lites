@@ -11,6 +11,6 @@ public class CartItemRequest {
     private Integer id;
     private Integer quantity;
     private Double unitPrice;
+    private Integer MenuItemId;
     private Integer cartId;
-    // TODO: customer id
 }

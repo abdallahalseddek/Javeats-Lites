@@ -7,71 +7,58 @@ import com.javaeat.model.*;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.CustomerRepository;
+import com.javaeat.repository.MenuItemRepository;
 import com.javaeat.request.CartItemRequest;
-import com.javaeat.response.*;
 import com.javaeat.services.CartService;
-import com.javaeat.util.Converter;
-import com.javaeat.util.MapperUtil;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final ModelMapper mapper;
     private final CustomerRepository customerRepository;
-    private final Converter converter;
+    private final MenuItemRepository menuItemRepository;
+    private final LocalDateTime dateTime = LocalDateTime.now();
 
     @Transactional
     @Override
-    public CartResponse addItemToCart(CartItemRequest cartItemRequest) {
+    public Cart addItemToCart(CartItemRequest cartItemRequest) {
         Cart cart = getCartById(cartItemRequest.getCartId());
-        //check if cart item exists or no
-        Optional<CartItem> existingCartItem = cartItemRepository.findById(cartItemRequest.getId());
-        existingCartItem.ifPresent(cartItem -> {
-            throw new IllegalArgumentException(ErrorMessage.CART_ITEM_ALREADY_EXISTS.name());
-        });
-        // if cart item does not exist create new one
-        CartItem cartItem =new CartItem();
-        updateCartDetails(cartItemRequest,cartItem, cart);
-        cartRepository.save(cart);
-        return converter.convert(cart,CartResponse.class);
+        CartItem cartItem = CartItem.buildCartItem(cartItemRequest);
+        cartItem.setCart(cart);
+        cartItem.setMenuItem(menuItemRepository.findById(cartItemRequest.getMenuItemId()).get());
+        cart.setCreationTime(dateTime);
+        updateCartDetails(cartItem, cart);
+        return cartRepository.save(cart);
     }
 
     @Transactional
     @Override
-    public CartItemResponse updateCartItem(CartItemRequest cartItemRequest) {
-        //check  cart item existence
-        CartItem cartItem =getCartItemById(cartItemRequest.getCartId());
+    public CartItem updateCartItem(CartItemRequest cartItemRequest) {
         Cart cart = getCartById(cartItemRequest.getId());
-        cart = updateCartDetails(cartItemRequest, cartItem, cart);
-        //save cart and with cascade save cart items
-        cartRepository.save(cart);
-        return converter.convert(cartItem,CartItemResponse.class); // its not clear function
+        CartItem cartItem = getCartItemById(cartItemRequest.getCartId());
+        cartItem.setUnitPrice(cartItemRequest.getUnitPrice());
+        cartItem.setQuantity(cartItemRequest.getQuantity());
+        updateCartDetails(cartItem, cart);
+        cart.setLastUpdatedTime(dateTime);
+        return cartItemRepository.save(cartItem);
     }
 
     @Transactional
     @Override
-    public DeleteCartResponse deleteCartItem(Integer itemId) {
-        var item = cartItemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Item"));
-        cartItemRepository.delete(item);
-        DeleteCartResponse response = mapper.map(item, DeleteCartResponse.class);
-        response.setIsDeleted(true);
-        response.setNote("Item with Id '" + itemId + "' is deleted successfully");
-        return response;
+    public void deleteCartItem(Integer itemId) {
+        CartItem cartItem = getCartItemById(itemId);
+        cartItem.getCart().setLastUpdatedTime(dateTime);
+        cartItemRepository.delete(cartItem);
     }
 
     @Transactional
@@ -79,48 +66,54 @@ public class CartServiceImpl implements CartService {
     public void clearCart(Integer cartId) {
         Cart cart = getCartById(cartId);
         cartItemRepository.deleteByCartId(cartId);
-        //clear cart
         cart.setTotalPrice(0.0);
         cart.setTotalItems(0);
     }
 
     @Override
-    public List<CartItemResponse> browseCart(Integer cartId) {
-        var cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Entity"));
-        return converter.toList(cart.getCartItems(), CartItemResponse.class);
+    public List<CartItem> browseCart(Integer cartId) {
+        Cart cart = getCartById(cartId);
+        return cartItemRepository.findAllByCart(cart);
     }
 
     @Override
-    public CartStatusResponse getCartStatus(Integer cartId) {
-        var cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Cart"));
-        return converter.convert(cart,CartStatusResponse.class);
+    public Cart getCartStatus(Integer cartId) {
+        return getCartById(cartId);
     }
 
     @Override
-    public CartStatusResponse updateCartStatus(Integer cartId, CartStatus newStatus) {
-        return null;
+    public Cart updateCartStatus(Integer cartId, CartStatus newStatus) {
+        Cart cart = getCartById(cartId);
+        cart.setStatus(newStatus);
+        cart.setLastUpdatedTime(dateTime);
+        return cart;
+    }
+
+    @Override
+    public MenuItem checkItemAvailable(Integer itemsId) {
+        return menuItemRepository.findById(itemsId).get();
     }
 
     private Cart getCartById(Integer cartId) {
         return cartRepository.findById(cartId).orElseThrow(
-                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), ErrorMessage.CART_NOT_FOUND.name()));
+                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(),
+                        ErrorMessage.CART_NOT_FOUND.name()));
     }
+
     private CartItem getCartItemById(Integer cartItemId) {
         return cartItemRepository.findById(cartItemId).orElseThrow(
-                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(), ErrorMessage.CART_ITEM_NOT_FOUND.name()));
+                () -> new NotFoundException(HttpStatus.NOT_FOUND.value(),
+                        ErrorMessage.CART_ITEM_NOT_FOUND.name()));
     }
-    private static Cart updateCartDetails(CartItemRequest cartItemRequest, CartItem cartItem, Cart cart) {
+
+    private void updateCartDetails(CartItem cartItem, Cart cart) {
         int oldCartItemQuantity = cartItem.getQuantity();
         double oldCartItemTotalPrice = cartItem.getTotalPrice();
-        cartItem = MapperUtil.mapToEntity(cartItemRequest);
-        cartItem.setTotalPrice(cartItem.getUnitPrice()* cartItem.getQuantity());
-        //update cart
+        cartItem.setTotalPrice(cartItem.getUnitPrice() * cartItem.getQuantity());
         CalculateCartTotalPriceAndTotalItems(cartItem, cart, oldCartItemTotalPrice, oldCartItemQuantity);
-        return cart;
     }
-    private static void CalculateCartTotalPriceAndTotalItems(CartItem cartItem, Cart cart, double oldCartItemTotalPrice, int oldCartItemQuantity) {
+
+    private void CalculateCartTotalPriceAndTotalItems(CartItem cartItem, Cart cart, double oldCartItemTotalPrice, int oldCartItemQuantity) {
         cart.setTotalPrice(cart.getTotalPrice() - oldCartItemTotalPrice + cartItem.getTotalPrice());
         cart.setTotalItems(cart.getTotalItems() - oldCartItemQuantity + cartItem.getQuantity());
         cart.getCartItems().add(cartItem);
