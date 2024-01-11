@@ -3,9 +3,7 @@ package com.javaeat.services.impl;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.enums.Status;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.model.Menu;
 import com.javaeat.model.Restaurant;
-import com.javaeat.repository.MenuRepository;
 import com.javaeat.repository.RestaurantRepository;
 import com.javaeat.request.RestaurantRequest;
 import com.javaeat.services.RestaurantService;
@@ -21,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
-    private final MenuRepository menuRepository;
     private final LocalDateTime dateTime = LocalDateTime.now();
 
     @Override
@@ -49,9 +46,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setRestaurantStatus(Status.DELETED);
         restaurantRepository.save(restaurant);
     }
+
     @Override
     public List<Restaurant> listAllRestaurants() {
-        return restaurantRepository.findAll();
+        return restaurantRepository.findAllByRestaurantStatus(Status.ACTIVE);
     }
 
     @Override

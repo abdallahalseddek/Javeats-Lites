@@ -57,7 +57,7 @@ public class RestaurantController {
     @Operation(summary = "delete Restaurant", description = "delete Restaurant")
     public ResponseEntity<String> deleteRestaurant(@PathVariable Integer restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);
-        return new ResponseEntity<>("restaurant with id "+ restaurantId +"deleted successfully"
+        return new ResponseEntity<>("restaurant with id '"+ restaurantId +"' deleted successfully"
                 ,HttpStatus.ACCEPTED);
     }
 
