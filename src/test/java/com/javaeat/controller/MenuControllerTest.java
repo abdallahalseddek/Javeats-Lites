@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaeat.model.Menu;
 import com.javaeat.model.MenuItem;
 import com.javaeat.model.Restaurant;
-import com.javaeat.model.RestaurantDetails;
 import com.javaeat.request.MenuItemRequest;
 import com.javaeat.request.MenuRequest;
 import com.javaeat.response.MenuItemResponse;

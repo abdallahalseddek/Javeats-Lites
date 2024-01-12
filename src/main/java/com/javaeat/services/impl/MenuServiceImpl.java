@@ -93,6 +93,12 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findMenusByRestaurantId(restaurantId);
     }
 
+    @Override
+    public List<MenuItem> findMenuItemByTitle(String title) {
+        isMenuItemNotExists(title);
+        return menuItemRepository.findByTitleContaining(title);
+    }
+
     public void isMenuItemExists(Integer menuItemId) {
         if (menuItemRepository.findById(menuItemId).isPresent()) {
             throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
@@ -104,6 +110,10 @@ public class MenuServiceImpl implements MenuService {
         if (menuItemRepository.findById(menuItemId).isEmpty()) {
             throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
                     ErrorMessage.MENU_ITEM_NOT_FOUND.name());}
+    }
+    public void isMenuItemNotExists(String title) {
+        List<MenuItem> menuItems =menuItemRepository.findByTitleContaining(title);
+        if(menuItems.isEmpty()) throw new NotFoundException(HttpStatus.FORBIDDEN.value(), ErrorMessage.MENU_ITEM_NOT_FOUND.name());
     }
     public void isMenuExists(Integer menuId) {
         if (menuRepository.findById(menuId).isPresent()) {

@@ -22,4 +22,5 @@ public interface MenuService {
     List<MenuItem> browseItemsInMenu(Integer menuId);
     List<Menu> browseAllRestaurantMenus(Integer restaurantId);
 
+    List<MenuItem> findMenuItemByTitle(String title);
 }

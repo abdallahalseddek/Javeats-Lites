@@ -2,6 +2,7 @@ package com.javaeat.controller;
 
 
 import com.javaeat.model.Menu;
+import com.javaeat.model.MenuItem;
 import com.javaeat.request.MenuItemRequest;
 import com.javaeat.request.MenuRequest;
 import com.javaeat.response.MenuItemResponse;
@@ -83,5 +84,11 @@ public class MenuController {
         menuService.deleteMenuItem(menuItemId);
         return new ResponseEntity<>("Item with id '" + menuItemId
                 +"' is deleted successfully", OK);
+    }
+
+    @GetMapping("/searchByTitle/{title}")
+    public ResponseEntity<List<MenuItem>> findMenuItemByTitle(@PathVariable String  title) {
+
+        return new ResponseEntity<>(menuService.findMenuItemByTitle(title),OK);
     }
 }

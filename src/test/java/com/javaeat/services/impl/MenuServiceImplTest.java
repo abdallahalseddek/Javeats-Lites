@@ -3,7 +3,6 @@ package com.javaeat.services.impl;
 import com.javaeat.repository.MenuItemRepository;
 import com.javaeat.repository.MenuRepository;
 import com.javaeat.repository.RestaurantRepository;
-import com.javaeat.util.GenericMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +20,7 @@ class MenuServiceImplTest {
     private  MenuItemRepository menuItemRepository;
     @Mock
     private  RestaurantRepository restaurantRepository;
-    @Mock
-    private  GenericMapper mapper;
+
     @InjectMocks
     private MenuServiceImpl menuService;
 
