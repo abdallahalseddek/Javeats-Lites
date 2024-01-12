@@ -1,9 +1,7 @@
 package com.javaeat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.javaeat.request.CartItemRequest;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,26 +11,34 @@ import javax.persistence.*;
 @Entity
 @Table(name = "cart_item")
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@Builder
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_item_id")
     private Integer id;
     @Column(name = "quantity")
-    private Integer quantity=0;
+    private Integer quantity;
     @Column(name = "unit_price")
     private Double unitPrice;
     @Column(name = "total_price")
-    private Double totalPrice=0.0;
+    private Double totalPrice;
     @ManyToOne
     @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
     private Cart cart;
-
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @JoinColumn(name = "menu_item_id",referencedColumnName = "menu_item_id")
+    private MenuItem menuItem;
     public Double getTotalPrice() {
         return totalPrice != null ? totalPrice : 0.0;
     }
+    public static CartItem buildCartItem(CartItemRequest request){
+       return CartItem.builder()
+                .id(request.getId())
+                .quantity(request.getQuantity())
+                .unitPrice(request.getUnitPrice())
+                .build();
 
-
-
-//TODO: add menu item id
+    }
 }

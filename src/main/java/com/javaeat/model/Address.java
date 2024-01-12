@@ -10,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "address")
+@EqualsAndHashCode
 public class Address {
 
     @Id

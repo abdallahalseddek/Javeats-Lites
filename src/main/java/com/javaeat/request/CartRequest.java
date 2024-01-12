@@ -19,5 +19,6 @@ public class CartRequest {
     private LocalDateTime updatedAt;
     private CartStatus status;
     private Double discount;
-    //List<CartItem> cartItems;
+    private String createdBy;
+    private String updatedBy;
 }

@@ -1,9 +1,6 @@
 package com.javaeat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "customer")
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Customer  extends BaseEntity {
 
     @Id
@@ -29,6 +27,4 @@ public class Customer  extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private List<Address> addresses ;
-
-
 }
