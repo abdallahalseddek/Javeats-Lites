@@ -1,26 +1,16 @@
 package com.javaeat.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 import java.io.Serializable;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class TestResponse  implements Serializable {
-
+public class ItemAvailabilityResponse implements Serializable {
     private static final long serialVersionUID = -8122049585335550616L;
-
-    private Integer num1;
-
-    private Integer num2;
-
-    private Integer sum;
-
+    private Integer itemId;
+    private Boolean isAvailable;
 }

@@ -11,7 +11,8 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TestRequest{
+
+public class TestRequest {
     @NotNull
     private Integer num1;
     @NotNull

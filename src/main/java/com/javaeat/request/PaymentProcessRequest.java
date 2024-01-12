@@ -1,7 +1,7 @@
 package com.javaeat.request;
 
 import com.javaeat.enums.PaymentMethod;
-import com.javaeat.enums.PaymentStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,11 +1,16 @@
 package com.javaeat.controller;
 
 import com.javaeat.enums.CartStatus;
-import com.javaeat.request.CartItemsRequest;
+import com.javaeat.request.CartItemRequest;
+import com.javaeat.request.CartRequest;
 import com.javaeat.response.*;
+import com.javaeat.services.CartService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +22,56 @@ import java.util.List;
 @RequestMapping("api/cart")
 @Slf4j
 @Tag(name = "Cart Endpoints")
+@AllArgsConstructor
 public class CartController {
+    private final CartService cartService;
+
+    @PostMapping("/add/cartItem")
+    @Operation(summary = "Add item to cart", description = "Add item to cart")
+    @ApiResponse(responseCode = "201", description = "Successful operation",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request. Invalid input data")
+    @ApiResponse(responseCode = "404", description = "Customer not found or Item not Found")
+    @ApiResponse(responseCode = "500", description = "Internal server error. Something went wrong")
+    ResponseEntity<CartResponse> addItemToCart(@RequestBody CartItemRequest request) {
+        return ResponseEntity.ok(cartService.addItemToCart(request));
+    }
+    // /api/cart/update/cartItem
+    @PatchMapping("/update/cartItem")
+    @Operation(summary = "Endpoint that modifies cart.",
+            description = "Endpoint that modifies the cart.")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponse(responseCode = "404", description = "Cart items Not Found")
+    public ResponseEntity<CartItemResponse> updateCartItem(@Valid @RequestBody CartItemRequest cartItemRequest) {
+        return ResponseEntity.ok(cartService.updateCartItem(cartItemRequest));
+    }
+    @DeleteMapping("/delete/cartItem/{itemId}")
+    @Operation(summary = "Endpoint that delete cart item ",
+            description = "Endpoint that delete cart item")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
+    public ResponseEntity<DeleteCartResponse> deleteCartItem(@PathVariable Integer itemId) {
+        return ResponseEntity.ok(cartService.deleteCartItem(itemId));
+    }
+
+    @DeleteMapping("/clear/{cartId}")
+    @Operation(summary = "Endpoint that delete all cart items of specific cart ",
+            description = "Endpoint that delete all cart items of specifc cart related to customer")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponse(responseCode = "404", description = "Item Not Found Exception")
+    public ResponseEntity<String> clearCart(@PathVariable Integer cartId) {
+        cartService.clearCart(cartId);
+        return ResponseEntity.ok("all cart items of cart " + cartId + " Deleted successfully");
+    }
+
+    @GetMapping("/browse-cart/{cartId}")
+    @Operation(summary = "Endpoint that list all items in the cart",
+            description = "Endpoint that list all items in the cart")
+    @ApiResponse(responseCode = "200", description = "Successful Operation")
+    @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
+    public ResponseEntity<List<CartItemResponse>> browseCart(@PathVariable Integer cartId) {
+        return ResponseEntity.ok(cartService.browseCart(cartId));
+    }
 
     @GetMapping("/status/{cartId}")
     @Operation(summary = "Endpoint that checks cart status",
@@ -25,10 +79,7 @@ public class CartController {
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
     public ResponseEntity<CartStatusResponse> getCartStatus(@PathVariable Integer cartId) {
-        // a method to call the service to get the status
-
-        //return a fake status
-        return ResponseEntity.ok(CartStatusResponse.builder().cartId(cartId).cartStatus(CartStatus.READ_ONLY).build());
+        return ResponseEntity.ok(cartService.getCartStatus(cartId));
     }
 
     @PutMapping("/status")
@@ -36,47 +87,17 @@ public class CartController {
             description = "Endpoint that updates the current status of the shopping cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
-    public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId, @RequestParam CartStatus  newStatus) {
-        // a method to call the service to get the status
-
-        //return a fake status
-        return ResponseEntity.ok(CartStatusResponse.builder().cartId(cartId).cartStatus(newStatus).build());
+    public ResponseEntity<CartStatusResponse> updateCartStatus(@RequestParam Integer cartId,
+                                                               @RequestParam CartStatus newStatus) {
+        return ResponseEntity.ok(cartService.updateCartStatus(cartId, newStatus));
     }
 
     @PostMapping("/item-availability")
     @Operation(summary = "Endpoint that checks the availability of items.",
             description = "Endpoint that checks the availability of items.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
-    public ResponseEntity<ItemsAvailabilityResponse> checkItemsAvailability(@Valid @RequestBody List<Integer> itemsIds) {
-        // a method to call the service to check Items Availability in the stock.
-
-        //return a fake status
-        return ResponseEntity.ok(ItemsAvailabilityResponse.builder().build());
-    }
-
-    @PatchMapping("/modify")
-    @Operation(summary = "Endpoint that modifies cart.",
-            description = "Endpoint that modifies the cart.")
-    @ApiResponse(responseCode = "200", description = "Successful Operation")
-    @ApiResponse(responseCode = "404", description = "Cart items Not Found")
-    public ResponseEntity<CartResponse> modifyCart(@Valid @RequestBody CartItemsRequest request) {
-        // a method to call the service to modify the cart items.
-
-        //return a fake status
-        return ResponseEntity.ok(CartResponse.builder().build());
-    }
-
-
-    @DeleteMapping("/clear/{cartId}")
-    @Operation(summary = "Endpoint that cancel order.",
-            description = "Endpoint that cancel the order.")
-    @ApiResponse(responseCode = "200", description = "Successful Operation")
-    @ApiResponse(responseCode = "404", description = "Order Not Found Exception")
-    public ResponseEntity<DeleteCartResponse> cancelOrder(@PathVariable Integer cartId) {
-        // a method to call the service to delete the order
-
-        //return a fake status
-        return ResponseEntity.ok(DeleteCartResponse.builder().cartId(cartId).isDeleted(Boolean.FALSE).note("Cart status is READ_ONLY, cannot clear it.").build());
+    public ResponseEntity<ItemAvailabilityResponse> checkItemAvailability(@Valid @RequestBody Integer itemsId) {
+        return ResponseEntity.ok(null);
     }
 
 
