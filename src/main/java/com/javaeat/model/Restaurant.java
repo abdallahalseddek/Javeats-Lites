@@ -39,6 +39,7 @@ public class Restaurant extends BaseEntity {
                 .description(request.getDescription())
                 .location(request.getLocation())
                 .restaurantStatus(request.getStatus())
+                .restaurantStatus(Status.ACTIVE)
                 .build();
         restaurant.setCreatedBy(request.getCreatedBy());
         restaurant.setUpdatedBy(request.getUpdatedBy());
