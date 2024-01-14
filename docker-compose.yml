@@ -1,10 +1,11 @@
 version: '3.1'
 
 services:
-  db:
+  javeats_lites_db:
     image: postgres
     restart: always
     environment:
+      POSTGRES_DB: javeats_lites
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     ports:

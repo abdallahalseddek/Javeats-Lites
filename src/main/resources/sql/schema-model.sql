@@ -237,7 +237,6 @@ CREATE TABLE transaction_transaction_details
     PRIMARY KEY (trans_id, details_id)
 
 );
-
-
+/
 
 
