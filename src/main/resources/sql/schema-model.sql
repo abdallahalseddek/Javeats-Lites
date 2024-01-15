@@ -13,6 +13,43 @@ CREATE TABLE USERS
     user_type SERIAL REFERENCES userType (type_id)
 );
 
+
+-- create  orders table
+DROP TABLE IF EXISTS ORDERS;
+CREATE TABLE ORDERS
+(
+    order_id   SERIAL PRIMARY KEY,
+    order_time TIMESTAMP  NOT NULL,
+    total_price  DECIMAL(5,3) not null ,
+    order_status_id SERIAL REFERENCES order_status(id),
+    payment_id  SERIAL REFERENCES Payment (payment_id),
+    delivery_id  SERIAL REFERENCES DELIVERY(delivery_id),
+    restaurant_id SERIAL REFERENCES Restaurant(restaurant_id),
+    customer_id SERIAL REFERENCES customer (customer_id)
+);
+
+
+-- create  payment table
+DROP TABLE IF EXISTS PAYMENT;
+CREATE TABLE PAYMENT
+(
+    payment_id   SERIAL PRIMARY KEY,
+    amount DECIMAL (5,3) NOT NULL ,
+    payment_method_id SERIAL REFERENCES payment_integration_type(id),
+    payment_status_id SERIAL references payment_status(id)
+    order_id SERIAL REFERENCES ORDERS (order_id)
+);
+
+
+-- create  delivery table
+DROP TABLE IF EXISTS DELIVERY;
+CREATE TABLE DELIVERY
+(
+    delivery_id   SERIAL PRIMARY KEY,
+    estimated_time    TIMESTAMP  NOT NULL,
+    delivery_status VARCHAR(20) NOT NULL ,
+    order_id SERIAL REFERENCES ORDERS (order_id)
+);
 -- create user type table
 DROP TABLE IF EXISTS userType;
 CREATE TABLE userType
@@ -117,15 +154,6 @@ CREATE TABLE cart_item
     cart_id      SERIAL REFERENCES cart (cart_id)
 );
 
--- create orders table
-DROP TABLE IF EXISTS orders;
-CREATE TABLE orders
-(
-    order_id    SERIAL PRIMARY KEY,
-    total_price DECIMAL(10, 2),
-    created_at  TIMESTAMP,
-    customer_id SERIAL REFERENCES customer (customer_id)
-);
 
 -- create order details table
 DROP TABLE IF EXISTS order_details;
@@ -173,6 +201,19 @@ CREATE TABLE payment_status
     name VARCHAR(255)
 );
 
+-- create delivery status table
+CREATE TABLE delivery_status
+(
+    id   INT PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+-- create order status table
+CREATE TABLE order_status
+(
+    id   INT PRIMARY KEY,
+    name VARCHAR(255)
+);
 -- create payment type configuration table
 DROP TABLE IF EXISTS payment_type_configuration;
 CREATE TABLE payment_type_configuration
