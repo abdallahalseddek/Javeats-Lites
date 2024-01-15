@@ -22,7 +22,7 @@ public class FinalizeOrderHandler extends OrderHandler {
         //clear cart
         cartRepository.deleteById(request.getCartId());
 
-        orderRepository.save(Order.builder().build())
+        orderRepository.save(Order.builder().build());
         log.info("Order has been placed successfully.");
         return true;
     }
