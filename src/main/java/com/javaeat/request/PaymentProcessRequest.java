@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentProcessRequest {
-    private Integer orderId;
     private PaymentMethod method;
     private Double amount;
 }
