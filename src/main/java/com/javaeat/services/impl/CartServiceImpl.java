@@ -119,29 +119,29 @@ public class CartServiceImpl implements CartService {
         cart.getCartItems().add(cartItem);
     }
 
-    @PostConstruct
-    void init() {
-
-        Cart cart = new Cart();
-        Address address = new Address();
-        address.setStreet("123 Main St");
-        address.setState("CA");
-        address.setGovernment("City");
-        address.setContactNumber("555-1234");
-        List<Address> addresses = new ArrayList<>();
-        addresses.add(address);
-
-        Customer customer = new Customer();
-        customer.setCart(cart);
-        customer.setAddresses(addresses);
-
-        cart.setTotalPrice(0.0);
-        cart.setStatus(CartStatus.READ_WRITE);
-        cart.setTotalItems(0);
-        cart.setCustomer(customer);
-
-        customerRepository.save(customer);
-    }
+//    @PostConstruct
+//    void init() {
+//
+//        Cart cart = new Cart();
+//        Address address = new Address();
+//        address.setStreet("123 Main St");
+//        address.setState("CA");
+//        address.setGovernment("City");
+//        address.setContactNumber("555-1234");
+//        List<Address> addresses = new ArrayList<>();
+//        addresses.add(address);
+//
+//        Customer customer = new Customer();
+//        customer.setCart(cart);
+//        customer.setAddresses(addresses);
+//
+//        cart.setTotalPrice(0.0);
+//        cart.setStatus(CartStatus.READ_WRITE);
+//        cart.setTotalItems(0);
+//        cart.setCustomer(customer);
+//
+//        customerRepository.save(customer);
+//    }
 
 }
 

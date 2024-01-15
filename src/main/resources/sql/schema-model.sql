@@ -1,5 +1,11 @@
-DROP DATABASE IF EXISTS javeats_lites;
-CREATE DATABASE javaEats_lites;
+
+-- create user type table
+DROP TABLE IF EXISTS userType;
+CREATE TABLE userType
+(
+    type_id SERIAL PRIMARY KEY,
+    name    VARCHAR(255)
+);
 
 -- create user table
 DROP TABLE IF EXISTS USERS;
@@ -13,13 +19,6 @@ CREATE TABLE USERS
     user_type SERIAL REFERENCES userType (type_id)
 );
 
--- create user type table
-DROP TABLE IF EXISTS userType;
-CREATE TABLE userType
-(
-    type_id SERIAL PRIMARY KEY,
-    name    VARCHAR(255)
-);
 
 -- create customer table
 DROP TABLE IF EXISTS customer;
@@ -190,7 +189,15 @@ CREATE TABLE preferred_payment_settings
     user_id                SERIAL REFERENCES USERS (user_id),
     payment_type_config_id SERIAL REFERENCES payment_type_configuration (id)
 );
-
+-- create transaction table table
+DROP TABLE IF EXISTS transaction_table;
+CREATE TABLE transaction_table
+(
+    id         SERIAL PRIMARY KEY,
+    status     VARCHAR(255),
+    audit_date DECIMAL,
+    order_id   SERIAL REFERENCES orders (order_id)
+);
 -- create transaction auditing table
 DROP TABLE IF EXISTS transaction_auditing;
 CREATE TABLE transaction_auditing
@@ -209,6 +216,7 @@ CREATE TABLE transaction_details
     details  VARCHAR(255)
 );
 
+
 -- create transaction payment status table
 DROP TABLE IF EXISTS transaction_payment_status;
 CREATE TABLE transaction_payment_status
@@ -218,15 +226,6 @@ CREATE TABLE transaction_payment_status
     payment_status_id SERIAL REFERENCES payment_status (id)
 );
 
--- create transaction table table
-DROP TABLE IF EXISTS transaction_table;
-CREATE TABLE transaction_table
-(
-    id         SERIAL PRIMARY KEY,
-    status     VARCHAR(255),
-    audit_date DECIMAL,
-    order_id   SERIAL REFERENCES orders (order_id)
-);
 
 -- create transaction transaction details table
 DROP TABLE IF EXISTS transaction_transaction_details;
