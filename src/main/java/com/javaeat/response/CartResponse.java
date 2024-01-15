@@ -17,14 +17,8 @@ public class CartResponse implements Serializable {
     private static final long serialVersionUID = -8122049585335550616L;
 
     private Integer cartId;
-    private List<ItemResponse> items;
-    private CartStatus cartStatus;
+    private List<CartItemResponse> items;
+    private CartStatus cartStatus= CartStatus.READ_WRITE;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    static class ItemResponse {
-        private Integer itemId;
-        private Integer quantity;
-    }
+
 }

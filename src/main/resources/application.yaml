@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/javeats_lites
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -19,7 +19,7 @@ spring:
 
   sql:
     init:
-      continue-on-error: true
+      continue-on-error: false
       mode: always
       schema-locations: 'classpath:sql/schema-*.sql'
       separator: '/'

@@ -1,15 +1,15 @@
 package com.javaeat.controller;
 
-import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.OrderStatus;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
-import com.javaeat.response.CartStatusResponse;
 import com.javaeat.response.DeleteOrderResponse;
 import com.javaeat.response.OrderStatusResponse;
+import com.javaeat.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,10 @@ import javax.validation.Valid;
 @RequestMapping("api/order")
 @Slf4j
 @Tag(name = "Place An Order Endpoints")
+@RequiredArgsConstructor
 public class OrderController {
+
+    private final OrderService orderService;
 
     @PostMapping
     @Operation(summary = "Endpoint that creates an order.",
@@ -29,7 +32,7 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = "Order has been created Successfully")
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
         // a method to call the service to create the order
-
+        orderService.createOrder(request);
         //return a fake status
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderResponse.builder().build());
     }
@@ -82,8 +85,6 @@ public class OrderController {
         //return a fake status
         return ResponseEntity.ok(OrderStatusResponse.builder().orderId(orderId).status(newStatus).build());
     }
-
-
 
 
 }

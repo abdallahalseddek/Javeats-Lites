@@ -17,11 +17,12 @@ import java.util.List;
 public class OrderRequest implements Serializable {
     private static final long serialVersionUID = -8122049585335550616L;
 
+    private Integer cartId;
     private Integer customerId;
     private Integer restaurantId;
     private Integer deliveryId;
-    private Integer paymentId;
-    private List<CartItem> items;
+    private PaymentProcessRequest paymentDetails;
+    private List<CartItemRequest> items;
     private String deliveryAddress;
 
 
