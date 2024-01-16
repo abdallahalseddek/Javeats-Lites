@@ -10,11 +10,10 @@ import com.javaeat.payment.CashPaymentStrategy;
 import com.javaeat.payment.PayPalPaymentStrategy;
 import com.javaeat.payment.PaymentStrategy;
 import com.javaeat.repository.CartRepository;
-import com.javaeat.repository.PaymentRespository;
+import com.javaeat.repository.PaymentRepository;
 import com.javaeat.request.OrderRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
@@ -25,7 +24,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PaymentProcessHandler  extends OrderHandler {
 
-    private final PaymentRespository paymentRespository;
+    private final PaymentRepository paymentRepository;
     private final CartRepository cartRepository;
 
     @Override

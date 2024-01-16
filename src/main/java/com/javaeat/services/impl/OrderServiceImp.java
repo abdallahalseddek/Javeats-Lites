@@ -15,17 +15,18 @@ public class OrderServiceImp implements OrderService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final RestaurantRepository restaurantRepository;
-    private final PaymentRespository paymentRespository;
+    private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
 
     @Override
     public boolean createOrder(OrderRequest request) {
 
+        // set the chain of responsibilities
         OrderHandler orderHandler = OrderHandler.link(
                   new CartLockCheckHandler(cartRepository)
                 , new ItemsAvailabilityCheckHandler(cartItemRepository)
                 , new RestaurantWorkingHoursCheckHandler(restaurantRepository)
-                , new PaymentProcessHandler(paymentRespository,cartRepository)
+                , new PaymentProcessHandler(paymentRepository,cartRepository)
                 , new FinalizeOrderHandler(orderRepository,cartRepository));
 
         return orderHandler.handle(request);

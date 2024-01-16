@@ -21,9 +21,9 @@ public class FinalizeOrderHandler extends OrderHandler {
     public boolean handle(OrderRequest request) {
         //clear cart
         cartRepository.deleteById(request.getCartId());
-
+        // save the order
         orderRepository.save(Order.builder().build());
         log.info("Order has been placed successfully.");
-        return true;
+        return handleNext(request);
     }
 }
