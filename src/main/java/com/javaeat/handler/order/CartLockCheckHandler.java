@@ -1,9 +1,11 @@
 package com.javaeat.handler.order;
 
 import com.javaeat.enums.CartStatus;
+import com.javaeat.exception.HandlerException;
 import com.javaeat.model.Cart;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -19,12 +21,12 @@ public class CartLockCheckHandler extends OrderHandler {
 
 
     @Override
-    public boolean handle(OrderRequest request) {
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
         Cart cart = cartRepository.findById(request.getCartId()).orElseThrow();
         if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
             log.info("Cart is locked. Cannot proceed with the order.");
-            return false;
+            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
         }
-        return handleNext(request);
+        return handleNext(request,response);
     }
 }

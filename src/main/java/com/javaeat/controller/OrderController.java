@@ -32,9 +32,8 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = "Order has been created Successfully")
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
         // a method to call the service to create the order
-        orderService.createOrder(request);
         //return a fake status
-        return ResponseEntity.status(HttpStatus.CREATED).body(OrderResponse.builder().build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request));
     }
 
     @GetMapping("/{orderId}")

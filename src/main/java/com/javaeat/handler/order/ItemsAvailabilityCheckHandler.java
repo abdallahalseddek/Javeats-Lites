@@ -1,45 +1,42 @@
 package com.javaeat.handler.order;
 
+import com.javaeat.exception.HandlerException;
 import com.javaeat.model.CartItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
-
 @Builder
 @Slf4j
 @AllArgsConstructor
-public class ItemsAvailabilityCheckHandler  extends OrderHandler {
-
+public class ItemsAvailabilityCheckHandler extends OrderHandler {
 
     private final CartItemRepository cartItemRepository;
 
     @Override
-    public boolean handle(OrderRequest request) {
-        boolean areItemsAvailable = request.getItems().stream().allMatch(cartItemRequest -> {
-            Optional<CartItem> itemOpt = cartItemRepository.findById(cartItemRequest.getId());
-            if(!itemOpt.isPresent()){
-                log.info("Item with ID " + cartItemRequest.getId() + " is not available.");
-                return false;
-            }
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        double totalPrice = request.getItems().stream()
+                .mapToDouble(cartItemRequest -> {
+                    CartItem item = cartItemRepository.findById(cartItemRequest.getId())
+                            .orElseThrow(() -> new HandlerException("Item with ID " + cartItemRequest.getId() + " is not available."));
 
-            CartItem item = itemOpt.get();
-            if (item.getQuantity() < cartItemRequest.getQuantity()){
-                log.info("Insufficient quantity for item ID " + cartItemRequest.getId());
-                return false;
-            }
+                    if (item.getQuantity() < cartItemRequest.getQuantity()) {
+                        throw new HandlerException("Insufficient quantity for item ID " + cartItemRequest.getId());
+                    }
 
-            return true;
-        });
+                    return item.getUnitPrice() * cartItemRequest.getQuantity();
+                })
+                .sum();
 
+        log.info("Total price of the order: " + totalPrice);
+        response.setTotalPrice(totalPrice);
 
-        if (!areItemsAvailable) {
-            return false;
-        }
-        return handleNext(request);
+        return handleNext(request, response);
     }
 }
+

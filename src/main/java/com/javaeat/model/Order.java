@@ -35,16 +35,13 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer ;
 
-    @OneToMany (mappedBy = "Orders")
-    @JoinColumn(name = "restaurant_id")
+    @OneToMany (mappedBy = "Order")
     private List<Restaurant> restaurants;
 
-    @OneToMany (mappedBy = "Orders")
-    @JoinColumn(name = "payment_id")
+    @OneToMany (mappedBy = "Order")
     private List<Payment>payments ;
 
-    @OneToMany (mappedBy = "Orders")
-    @JoinColumn(name = "delivery_id")
+    @OneToMany (mappedBy = "Order")
     private List<Delivery>deliveries ;
 
 

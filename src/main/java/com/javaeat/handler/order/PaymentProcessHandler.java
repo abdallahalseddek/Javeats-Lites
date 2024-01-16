@@ -3,8 +3,10 @@ package com.javaeat.handler.order;
 import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.enums.PaymentMethod;
+import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
 import com.javaeat.model.Cart;
+import com.javaeat.model.Payment;
 import com.javaeat.payment.CardPaymentStrategy;
 import com.javaeat.payment.CashPaymentStrategy;
 import com.javaeat.payment.PayPalPaymentStrategy;
@@ -12,6 +14,7 @@ import com.javaeat.payment.PaymentStrategy;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.PaymentRepository;
 import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -28,16 +31,19 @@ public class PaymentProcessHandler  extends OrderHandler {
     private final CartRepository cartRepository;
 
     @Override
-    public boolean handle(OrderRequest request) {
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
         PaymentStrategy paymentStrategy = getPaymentStrategy(request.getPaymentDetails().getMethod());
 
         if (!paymentStrategy.processPayment(request.getPaymentDetails())) {
             log.info("Payment failed. Unlocking the cart.");
             //unlock the cart
             unlockCart(request.getCartId());
-            return false;
+            throw new HandlerException("Payment failed. Unlocking the cart.");
         }
-        return handleNext(request);
+
+//        Payment payment = paymentRepository.save(Payment.builder().build());
+        response.setPaymentId(10L);
+        return handleNext(request,response);
     }
 
     private void unlockCart(Integer cartId) {

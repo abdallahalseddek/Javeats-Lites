@@ -4,6 +4,7 @@ import com.javaeat.handler.order.*;
 import com.javaeat.model.Cart;
 import com.javaeat.repository.*;
 import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import com.javaeat.services.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class OrderServiceImp implements OrderService {
     private final OrderRepository orderRepository;
 
     @Override
-    public boolean createOrder(OrderRequest request) {
+    public OrderResponse createOrder(OrderRequest request) {
 
         // set the chain of responsibilities
         OrderHandler orderHandler = OrderHandler.link(
@@ -29,7 +30,16 @@ public class OrderServiceImp implements OrderService {
                 , new PaymentProcessHandler(paymentRepository,cartRepository)
                 , new FinalizeOrderHandler(orderRepository,cartRepository));
 
-        return orderHandler.handle(request);
+        OrderResponse response = OrderResponse.builder()
+                .customerId(request.getCustomerId())
+                .restaurantId(request.getRestaurantId())
+                .deliveryId(request.getDeliveryId())
+                .items(request.getItems())
+                .deliveryAddress(request.getDeliveryAddress())
+                .build();
+
+
+        return orderHandler.handle(request,response);
     }
 
 

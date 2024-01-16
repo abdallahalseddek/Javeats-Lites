@@ -1,8 +1,10 @@
 package com.javaeat.handler.order;
 
+import com.javaeat.exception.HandlerException;
 import com.javaeat.model.Restaurant;
 import com.javaeat.repository.RestaurantRepository;
 import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,7 @@ public class RestaurantWorkingHoursCheckHandler extends OrderHandler {
 
     private final RestaurantRepository restaurantRepository;
     @Override
-    public boolean handle(OrderRequest request) {
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
 
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).orElseThrow();
 
@@ -30,9 +32,9 @@ public class RestaurantWorkingHoursCheckHandler extends OrderHandler {
 
         if (currentTime.isBefore(openingTime) || currentTime.isAfter(closingTime)) {
             log.info("The restaurant is currently closed.");
-            return false;
+            throw new HandlerException("The restaurant is currently closed.");
         }
-        return handleNext(request);
+        return handleNext(request,response);
 
     }
 }

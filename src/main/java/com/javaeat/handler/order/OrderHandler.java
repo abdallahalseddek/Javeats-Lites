@@ -1,6 +1,7 @@
 package com.javaeat.handler.order;
 
 import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,16 +20,16 @@ public abstract class OrderHandler {
         return first;
     }
 
-    public abstract boolean handle(OrderRequest request);
+    public abstract OrderResponse handle(OrderRequest request, OrderResponse response);
 
     /**
      * Runs check on the next object in chain or ends traversing if we're in
      * last object in chain.
      */
-    protected boolean handleNext(OrderRequest request) {
+    protected OrderResponse handleNext(OrderRequest request, OrderResponse response) {
         if (next == null) {
-            return true;
+            return response;
         }
-        return next.handle(request);
+        return next.handle(request,response);
     }
 }

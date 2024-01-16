@@ -6,5 +6,5 @@ import com.javaeat.request.OrderResponse;
 
 public interface OrderService {
 
-    boolean createOrder(OrderRequest request);
+    OrderResponse createOrder(OrderRequest request);
 }
