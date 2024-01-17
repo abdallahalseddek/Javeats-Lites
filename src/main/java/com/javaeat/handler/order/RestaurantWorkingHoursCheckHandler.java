@@ -26,7 +26,7 @@ public class RestaurantWorkingHoursCheckHandler extends OrderHandler {
         // Mock restaurant with working hours from 10:00 AM to 8:00 PM
         LocalTime openingTime = LocalTime.of(10, 0);
 //        LocalTime openingTime = restaurant.getOpeningTime();
-        LocalTime closingTime = LocalTime.of(20, 0);
+        LocalTime closingTime = LocalTime.of(23, 0);
 //        LocalTime closingTime = restaurant.getClosingTime();
         LocalTime currentTime = LocalTime.now();
 

@@ -46,6 +46,7 @@ public class PaymentProcessHandler  extends OrderHandler {
                 .amount(response.getTotalPrice())
                 .method(request.getPaymentDetails().getMethod())
                 .status(PaymentStatus.SUCCESS)
+
                 .build());
 
         response.setPaymentId(payment.getId());

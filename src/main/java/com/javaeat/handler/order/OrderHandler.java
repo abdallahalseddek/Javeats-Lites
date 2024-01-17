@@ -1,12 +1,8 @@
 package com.javaeat.handler.order;
 
-import com.javaeat.repository.*;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
-import com.javaeat.util.MapperUtil;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,7 +11,7 @@ public abstract class OrderHandler {
     protected OrderHandler next;
 
 
-    public static OrderHandler link(OrderHandler first, OrderHandler... chain) {
+    public static OrderHandler processOrder(OrderHandler first, OrderHandler... chain) {
         OrderHandler head = first;
         for (OrderHandler nextInChain : chain) {
             head.next = nextInChain;

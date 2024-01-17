@@ -1,5 +1,7 @@
 package com.javaeat.services.impl;
 
+import com.javaeat.enums.CartStatus;
+import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
 import com.javaeat.handler.order.*;
 import com.javaeat.model.Cart;
@@ -11,12 +13,14 @@ import com.javaeat.response.OrderStatusResponse;
 import com.javaeat.services.OrderService;
 import com.javaeat.util.MapperUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OrderServiceImp implements OrderService {
 
     private final CartRepository cartRepository;
@@ -32,7 +36,7 @@ public class OrderServiceImp implements OrderService {
     public OrderResponse createOrder(OrderRequest request) {
 
         // set the chain of responsibilities
-        OrderHandler orderHandler = OrderHandler.link(
+        OrderHandler orderHandler = OrderHandler.processOrder(
                   new CartLockCheckHandler(cartRepository)
                 , new ItemsAvailabilityCheckHandler(menuItemRepository)
                 , new RestaurantWorkingHoursCheckHandler(restaurantRepository)
@@ -89,4 +93,12 @@ public class OrderServiceImp implements OrderService {
         return orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(404, "Cannot find order with this id"));
     }
 
+//    private void handleCartLock(OrderRequest request){
+//        Cart cart = cartRepository.findById(request.getCartId()).orElseThrow(() -> new HandlerException("cart with ID " + request.getCartId() + " is not available."));
+//        log.info("cart status: {}",cart.getStatus());
+//        if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
+//            log.info("Cart is locked. Cannot proceed with the order.");
+//            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
+//        }
+//    }
 }

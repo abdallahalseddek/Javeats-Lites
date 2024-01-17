@@ -54,7 +54,7 @@ public class FinalizeOrderHandler extends OrderHandler {
 
 
         Order savedOrder = orderRepository.save(order);
-        payment.setOrder(savedOrder);
+//        payment.setOrder(savedOrder);
 
         response.setOrderId(savedOrder.getOrderId());
         response.setOrderTime(savedOrder.getOrderTime());
