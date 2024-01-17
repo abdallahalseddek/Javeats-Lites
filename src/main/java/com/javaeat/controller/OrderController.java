@@ -32,7 +32,6 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = "Order has been created Successfully")
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
         // a method to call the service to create the order
-        //return a fake status
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request));
     }
 
@@ -43,9 +42,7 @@ public class OrderController {
     @ApiResponse(responseCode = "404", description = "Order Not Found Exception")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable Integer orderId) {
         // a method to call the service to get the order details
-
-        //return a fake status
-        return ResponseEntity.ok(OrderResponse.builder().build());
+        return ResponseEntity.ok(orderService.getOrder(orderId));
     }
 
 
@@ -54,11 +51,9 @@ public class OrderController {
             description = "Endpoint that cancel the order.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
     @ApiResponse(responseCode = "404", description = "Order Not Found Exception")
-    public ResponseEntity<DeleteOrderResponse> cancelOrder(@PathVariable Integer orderId) {
+    public ResponseEntity<OrderStatusResponse> cancelOrder(@PathVariable Integer orderId) {
         // a method to call the service to cancel the order
-
-        //return a fake status
-        return ResponseEntity.ok(DeleteOrderResponse.builder().orderId(orderId).isDeleted(Boolean.FALSE).note("Cannot cancel it, Order has been accepted by the restaurant.").build());
+        return ResponseEntity.ok(orderService.cancel(orderId));
     }
 
     @GetMapping("/status/{orderId}")
@@ -70,19 +65,17 @@ public class OrderController {
         // a method to call the service to get the status
 
         //return a fake status
-        return ResponseEntity.ok(OrderStatusResponse.builder().orderId(orderId).status(OrderStatus.PURCHASED).build());
+        return ResponseEntity.ok(orderService.getStatus(orderId));
     }
 
     @PutMapping("/status")
     @Operation(summary = "Endpoint that updates order status",
             description = "Endpoint that updates the current order of the shopping cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
-    @ApiResponse(responseCode = "404", description = "Cart Not Found Exception")
-    public ResponseEntity<OrderStatusResponse> updateCartStatus(@RequestParam Integer orderId, @RequestParam OrderStatus newStatus) {
+    @ApiResponse(responseCode = "404", description = "Order Not Found Exception")
+    public ResponseEntity<OrderStatusResponse> updateOrderStatus(@RequestParam Integer orderId) {
         // a method to call the service to update the status
-
-        //return a fake status
-        return ResponseEntity.ok(OrderStatusResponse.builder().orderId(orderId).status(newStatus).build());
+        return ResponseEntity.ok(orderService.updateStatus(orderId));
     }
 
 

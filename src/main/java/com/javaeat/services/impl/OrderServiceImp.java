@@ -1,13 +1,19 @@
 package com.javaeat.services.impl;
 
+import com.javaeat.exception.NotFoundException;
 import com.javaeat.handler.order.*;
 import com.javaeat.model.Cart;
+import com.javaeat.model.Order;
 import com.javaeat.repository.*;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
+import com.javaeat.response.OrderStatusResponse;
 import com.javaeat.services.OrderService;
+import com.javaeat.util.MapperUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -18,7 +24,9 @@ public class OrderServiceImp implements OrderService {
     private final RestaurantRepository restaurantRepository;
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+    private final MapperUtil mapperUtil;
 
+    @Transactional
     @Override
     public OrderResponse createOrder(OrderRequest request) {
 
@@ -42,5 +50,40 @@ public class OrderServiceImp implements OrderService {
         return orderHandler.handle(request,response);
     }
 
+    @Override
+    public OrderResponse getOrder(Integer orderId) {
+        Order order = getOrderById(orderId);
+        return mapperUtil.mapEntity(order, OrderResponse.class);
+    }
+    @Override
+    public OrderStatusResponse updateStatus(Integer orderId) {
+        Order order = getOrderById(orderId);
+        order.updateStatus();
+        Order savedOrder = orderRepository.save(order);
+        return buildNewStatusResponse(savedOrder);
+    }
+
+    @Override
+    public OrderStatusResponse getStatus(Integer orderId) {
+        Order order = getOrderById(orderId);
+        return buildNewStatusResponse(order);
+    }
+
+    @Override
+    public OrderStatusResponse cancel(Integer orderId) {
+        Order order = getOrderById(orderId);
+        order.cancelOrder();
+        Order savedOrder = orderRepository.save(order);
+        return buildNewStatusResponse(savedOrder);
+    }
+
+    private static OrderStatusResponse buildNewStatusResponse(Order savedOrder) {
+        return OrderStatusResponse.builder().orderId(savedOrder.getOrderId()).status(savedOrder.getOrderStatus()).build();
+    }
+
+
+    private Order getOrderById(Integer orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(404, "Cannot find order with this id"));
+    }
 
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class OrderResponse implements Serializable {
     private static final long serialVersionUID = -8122049585335550616L;
 
-    private Long orderId;
+    private Integer orderId;
     private Integer customerId;
     private Integer restaurantId;
     private Integer deliveryId;
