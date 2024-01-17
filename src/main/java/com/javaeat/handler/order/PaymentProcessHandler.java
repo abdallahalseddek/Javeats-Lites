@@ -3,6 +3,7 @@ package com.javaeat.handler.order;
 import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.enums.PaymentMethod;
+import com.javaeat.enums.PaymentStatus;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
 import com.javaeat.model.Cart;
@@ -41,8 +42,13 @@ public class PaymentProcessHandler  extends OrderHandler {
             throw new HandlerException("Payment failed. Unlocking the cart.");
         }
 
-//        Payment payment = paymentRepository.save(Payment.builder().build());
-        response.setPaymentId(10L);
+        Payment payment = paymentRepository.save(Payment.builder()
+                .amount(response.getTotalPrice())
+                .method(request.getPaymentDetails().getMethod())
+                .status(PaymentStatus.SUCCESS)
+                .build());
+
+        response.setPaymentId(payment.getId());
         return handleNext(request,response);
     }
 

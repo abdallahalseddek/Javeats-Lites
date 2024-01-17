@@ -21,7 +21,7 @@ public class RestaurantWorkingHoursCheckHandler extends OrderHandler {
     @Override
     public OrderResponse handle(OrderRequest request, OrderResponse response) {
 
-        Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).orElseThrow();
+        Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).orElseThrow(() -> new HandlerException("Restaurant with ID " + request.getRestaurantId() + " is not available."));
 
         // Mock restaurant with working hours from 10:00 AM to 8:00 PM
         LocalTime openingTime = LocalTime.of(10, 0);

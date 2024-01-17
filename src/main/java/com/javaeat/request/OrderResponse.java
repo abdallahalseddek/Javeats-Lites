@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class OrderResponse implements Serializable {
     private Long paymentId;
     private List<CartItemRequest> items;
     private Double totalPrice;
-    private Date createdAt;
+    private LocalDateTime orderTime;
     private String deliveryAddress;
     private OrderStatus orderStatus;
 }

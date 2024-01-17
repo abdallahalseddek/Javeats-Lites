@@ -22,7 +22,7 @@ public class CartLockCheckHandler extends OrderHandler {
 
     @Override
     public OrderResponse handle(OrderRequest request, OrderResponse response) {
-        Cart cart = cartRepository.findById(request.getCartId()).orElseThrow();
+        Cart cart = cartRepository.findById(request.getCartId()).orElseThrow(() -> new HandlerException("cart with ID " + request.getCartId() + " is not available."));
         if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
             log.info("Cart is locked. Cannot proceed with the order.");
             throw new HandlerException("Cart is locked. Cannot proceed with the order.");

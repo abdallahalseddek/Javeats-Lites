@@ -5,6 +5,7 @@ import com.javaeat.request.RestaurantRequest;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.List;
 
 @Setter
@@ -29,6 +30,10 @@ public class Restaurant extends BaseEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status restaurantStatus;
+    @Column(name = "opening_time")
+    private LocalTime OpeningTime;
+    @Column(name = "closing_time")
+    private LocalTime ClosingTime;
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "restaurant_id")
     private List<Address> addresses ;

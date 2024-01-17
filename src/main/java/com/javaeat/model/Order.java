@@ -1,6 +1,7 @@
 package com.javaeat.model;
 
 import com.javaeat.enums.OrderStatus;
+import com.javaeat.exception.HandlerException;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,24 +26,25 @@ public class Order {
     @Column(name = "order_time",nullable = false)
     private LocalDateTime orderTime;
 
+
     @Column(name = "total_price")
     private double totalPrice;
 
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private Customer customer ;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
     @OneToOne
     private Payment payment;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery ;
 
@@ -60,8 +62,7 @@ public class Order {
                 break;
             case DELIVERED:
             case CANCELLED:
-                // No action needed as these are final states
-                break;
+                throw new HandlerException("Cannot update the status, the order has been cancelled");
             default:
                 throw new IllegalStateException("Unknown order status");
         }

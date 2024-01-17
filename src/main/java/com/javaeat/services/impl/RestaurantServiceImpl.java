@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -26,6 +27,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         isRestaurantExists(restaurantRequest.getId());
         Restaurant restaurant = Restaurant.buildRestaurant(restaurantRequest);
         restaurant.setCreationTime(dateTime);
+        // set opening and closing time
+        restaurant.setOpeningTime(LocalTime.of(10,0));
+        restaurant.setClosingTime(LocalTime.of(21,30));
         return restaurantRepository.save(restaurant);
     }
 

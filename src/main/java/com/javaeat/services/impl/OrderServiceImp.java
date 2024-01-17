@@ -36,7 +36,7 @@ public class OrderServiceImp implements OrderService {
                 , new ItemsAvailabilityCheckHandler(cartItemRepository)
                 , new RestaurantWorkingHoursCheckHandler(restaurantRepository)
                 , new PaymentProcessHandler(paymentRepository,cartRepository)
-                , new FinalizeOrderHandler(orderRepository,cartRepository));
+                , new FinalizeOrderHandler(orderRepository,cartRepository,paymentRepository,restaurantRepository,mapperUtil));
 
         OrderResponse response = OrderResponse.builder()
                 .customerId(request.getCustomerId())
@@ -56,6 +56,7 @@ public class OrderServiceImp implements OrderService {
         return mapperUtil.mapEntity(order, OrderResponse.class);
     }
     @Override
+    @Transactional
     public OrderStatusResponse updateStatus(Integer orderId) {
         Order order = getOrderById(orderId);
         order.updateStatus();
@@ -70,6 +71,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderStatusResponse cancel(Integer orderId) {
         Order order = getOrderById(orderId);
         order.cancelOrder();
