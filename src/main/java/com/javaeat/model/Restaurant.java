@@ -32,6 +32,8 @@ public class Restaurant extends BaseEntity {
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "restaurant_id")
     private List<Address> addresses ;
+    @OneToMany(mappedBy = "restaurant" , fetch = FetchType.LAZY)
+    private List<Order> orders;
     public static Restaurant buildRestaurant(RestaurantRequest request){
         Restaurant restaurant = Restaurant.builder()
                 .id(request.getId())

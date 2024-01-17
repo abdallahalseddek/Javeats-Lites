@@ -35,14 +35,16 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer ;
 
-    @OneToMany (mappedBy = "Order")
-    private List<Restaurant> restaurants;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
-    @OneToMany (mappedBy = "Order")
-    private List<Payment>payments ;
+    @OneToOne
+    private Payment payment;
 
-    @OneToMany (mappedBy = "Order")
-    private List<Delivery> deliveries ;
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery ;
 
     // Method to update the order status
     public void updateStatus() {

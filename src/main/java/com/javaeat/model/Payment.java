@@ -5,6 +5,7 @@ import com.javaeat.enums.PaymentStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Entity
@@ -27,9 +28,9 @@ public class Payment {
     @Column(name = "payment_status")
     @Enumerated(EnumType.STRING)
     private PaymentStatus status ;
-    @ManyToOne
-    @JoinColumn(name = "order_id",referencedColumnName = "order_id")
-    private Order order ;
+    @OneToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private Order order;
 
 
 }
