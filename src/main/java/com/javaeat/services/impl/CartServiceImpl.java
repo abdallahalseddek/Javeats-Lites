@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCartById(cartId);
         cart.setStatus(newStatus);
         cart.setLastUpdatedTime(dateTime);
-        return cart;
+        return cartRepository.save(cart);
     }
 
     @Override
