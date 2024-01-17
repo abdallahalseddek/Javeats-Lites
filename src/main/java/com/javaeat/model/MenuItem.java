@@ -23,6 +23,8 @@ public class MenuItem extends BaseEntity{
     private String ingredients;
     @Column(name = "price")
     private Double price;
+    @Column(name = "quantity")
+    private Integer quantity;
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinColumn(name = "menu_id",referencedColumnName = "menu_id")
     private Menu menu;
@@ -32,6 +34,7 @@ public class MenuItem extends BaseEntity{
                 .title(request.getTitle())
                 .ingredients(request.getIngredients())
                 .price(request.getPrice())
+                .quantity(request.getQuantity())
                 .build();
         menuItem.setCreatedBy(request.getCreatedBy());
         menuItem.setUpdatedBy(request.getUpdatedBy());

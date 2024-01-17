@@ -12,5 +12,6 @@ public class MenuItemResponse {
     private String title;
     private String ingredients;
     private Double price;
+    private Integer quantity;
     private Integer menuId;
 }

@@ -24,6 +24,7 @@ public class OrderServiceImp implements OrderService {
     private final RestaurantRepository restaurantRepository;
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+    private final MenuItemRepository menuItemRepository;
     private final MapperUtil mapperUtil;
 
     @Transactional
@@ -33,7 +34,7 @@ public class OrderServiceImp implements OrderService {
         // set the chain of responsibilities
         OrderHandler orderHandler = OrderHandler.link(
                   new CartLockCheckHandler(cartRepository)
-                , new ItemsAvailabilityCheckHandler(cartItemRepository)
+                , new ItemsAvailabilityCheckHandler(menuItemRepository)
                 , new RestaurantWorkingHoursCheckHandler(restaurantRepository)
                 , new PaymentProcessHandler(paymentRepository,cartRepository)
                 , new FinalizeOrderHandler(orderRepository,cartRepository,paymentRepository,restaurantRepository,mapperUtil));
