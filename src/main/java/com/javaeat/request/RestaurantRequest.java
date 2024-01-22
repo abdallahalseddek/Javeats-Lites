@@ -13,7 +13,6 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class RestaurantRequest {
-    private Integer id;
     private String name;
     private String description;
     private Status status;
