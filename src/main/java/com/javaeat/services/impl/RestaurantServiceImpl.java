@@ -36,7 +36,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional
     public Restaurant updateRestaurant(RestaurantRequest restaurantRequest) {
-        isRestaurantNotExists(restaurantRequest.getName());
+        isRestaurantNotExists(restaurantRequest.getId());
         Restaurant restaurant = Restaurant.buildRestaurant(restaurantRequest);
         restaurant.setLastUpdatedTime(dateTime);
         restaurant.setOpeningTime(restaurantRequest.getOpeningTime());
@@ -70,8 +70,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
     }
 
-    public void isRestaurantNotExists(String restaurantName) {
-        if (restaurantRepository.findByName(restaurantName).isEmpty()) {
+    public void isRestaurantNotExists(Integer restaurantId) {
+        if (restaurantRepository.findById(restaurantId).isEmpty()) {
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(),
                     ErrorMessage.RESTAURANT_NOT_FOUND.name());
         }
