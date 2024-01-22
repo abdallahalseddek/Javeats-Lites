@@ -27,9 +27,7 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "cart_id",referencedColumnName = "cart_id")
     private Cart cart;
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
-    @JoinColumn(name = "menu_item_id",referencedColumnName = "menu_item_id")
-    private MenuItem menuItem;
+
     public Double getTotalPrice() {
         return totalPrice != null ? totalPrice : 0.0;
     }

@@ -16,4 +16,6 @@ public interface RestaurantService {
 
     void deleteRestaurant(Integer restaurantId);
 
+
+
 }

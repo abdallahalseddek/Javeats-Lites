@@ -24,12 +24,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant addNewRestaurant(RestaurantRequest restaurantRequest) {
-        isRestaurantExists(restaurantRequest.getId());
+        isRestaurantExists(restaurantRequest.getName());
         Restaurant restaurant = Restaurant.buildRestaurant(restaurantRequest);
         restaurant.setCreationTime(dateTime);
         // set opening and closing time
-        restaurant.setOpeningTime(LocalTime.of(10,0));
-        restaurant.setClosingTime(LocalTime.of(21,30));
+        restaurant.setOpeningTime(restaurantRequest.getOpeningTime());
+        restaurant.setClosingTime(restaurantRequest.getClosingTime());
         return restaurantRepository.save(restaurant);
     }
 
@@ -39,6 +39,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         isRestaurantNotExists(restaurantRequest.getId());
         Restaurant restaurant = Restaurant.buildRestaurant(restaurantRequest);
         restaurant.setLastUpdatedTime(dateTime);
+        restaurant.setOpeningTime(restaurantRequest.getOpeningTime());
+        restaurant.setClosingTime(restaurantRequest.getClosingTime());
         return restaurantRepository.save(restaurant);
     }
 
@@ -61,8 +63,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         return null;
     }
 
-    public void isRestaurantExists(Integer restaurantId) {
-        if (restaurantRepository.findById(restaurantId).isPresent()) {
+    public void isRestaurantExists(String restaurantName ) {
+        if (restaurantRepository.findByName(restaurantName).isPresent()) {
             throw new NotFoundException(HttpStatus.NOT_FOUND.value(),
                     ErrorMessage.RESTAURANT_ALREADY_EXISTS.name());
         }

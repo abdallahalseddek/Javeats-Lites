@@ -9,6 +9,7 @@ import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.CustomerRepository;
 import com.javaeat.repository.MenuItemRepository;
 import com.javaeat.request.CartItemRequest;
+import com.javaeat.request.CartRequest;
 import com.javaeat.services.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,6 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCartById(cartItemRequest.getCartId());
         CartItem cartItem = CartItem.buildCartItem(cartItemRequest);
         cartItem.setCart(cart);
-        cartItem.setMenuItem(menuItemRepository.findById(cartItemRequest.getMenuItemId()).get());
         cart.setCreationTime(dateTime);
         updateCartDetails(cartItem, cart);
         return cartRepository.save(cart);
@@ -92,6 +92,17 @@ public class CartServiceImpl implements CartService {
     @Override
     public MenuItem checkItemAvailable(Integer itemsId) {
         return menuItemRepository.findById(itemsId).get();
+    }
+
+    @Override
+    public Cart createCart(CartRequest cartRequest) {
+        Customer customer=customerRepository.findById(cartRequest.getCustomerId())
+                .orElseThrow(() -> new NotFoundException(HttpStatus.NOT_FOUND.value(),
+                ErrorMessage.CUSTOMER_NOT_FOUND.name()));
+        Cart newCart = Cart.buildCart(cartRequest);
+        newCart.setCustomer(customer);
+
+        return cartRepository.save(newCart);
     }
 
     private Cart getCartById(Integer cartId) {

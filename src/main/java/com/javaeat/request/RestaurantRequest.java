@@ -20,4 +20,6 @@ public class RestaurantRequest {
     private String location;
     private String createdBy;
     private String updatedBy;
+    private LocalTime OpeningTime;
+    private LocalTime ClosingTime;
 }
