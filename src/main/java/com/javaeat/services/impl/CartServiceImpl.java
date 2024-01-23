@@ -5,7 +5,10 @@ import com.javaeat.enums.ErrorMessage;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
 import com.javaeat.handler.order.OrderHandler;
-import com.javaeat.model.*;
+import com.javaeat.model.Cart;
+import com.javaeat.model.CartItem;
+import com.javaeat.model.Customer;
+import com.javaeat.model.MenuItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.CustomerRepository;
@@ -20,10 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -134,30 +135,6 @@ public class CartServiceImpl extends OrderHandler implements CartService {
         cart.setTotalPrice(cart.getTotalPrice() - oldCartItemTotalPrice + cartItem.getTotalPrice());
         cart.setTotalItems(cart.getTotalItems() - oldCartItemQuantity + cartItem.getQuantity());
         cart.getCartItems().add(cartItem);
-    }
-
-    @PostConstruct
-    void init() {
-
-        Cart cart = new Cart();
-        Address address = new Address();
-        address.setStreet("123 Main St");
-        address.setState("CA");
-        address.setGovernment("City");
-        address.setContactNumber("555-1234");
-        List<Address> addresses = new ArrayList<>();
-        addresses.add(address);
-
-        Customer customer = new Customer();
-        customer.setCart(cart);
-        customer.setAddresses(addresses);
-
-        cart.setTotalPrice(0.0);
-        cart.setStatus(CartStatus.READ_WRITE);
-        cart.setTotalItems(0);
-        cart.setCustomer(customer);
-
-        customerRepository.save(customer);
     }
 
     @Override
