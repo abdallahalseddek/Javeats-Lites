@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
-    public ErrorResponse handleServerErrorException(Exception e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(500, e.getMessage());
-    }
+//    @ExceptionHandler(value = Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ResponseBody
+//    public ErrorResponse handleServerErrorException(Exception e) {
+//        log.error(e.getMessage());
+//        return new ErrorResponse(500, e.getMessage());
+//    }
 
     // You can define other exception handlers here
 

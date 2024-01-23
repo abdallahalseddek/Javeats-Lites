@@ -8,13 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public abstract class OrderHandler {
-    protected OrderHandler next;
+     OrderHandler next;
 
 
     public static OrderHandler processOrder(OrderHandler first, OrderHandler... chain) {
         OrderHandler head = first;
         for (OrderHandler nextInChain : chain) {
-            head.next = nextInChain;
+            log.info("assign to the next");
+            head.setNext(nextInChain);
             head = nextInChain;
         }
         return first;

@@ -2,29 +2,34 @@ package com.javaeat.services.impl;
 
 import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.ErrorMessage;
+import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.model.Cart;
-import com.javaeat.model.CartItem;
-import com.javaeat.model.Customer;
-import com.javaeat.model.MenuItem;
+import com.javaeat.handler.order.OrderHandler;
+import com.javaeat.model.*;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.CustomerRepository;
 import com.javaeat.repository.MenuItemRepository;
 import com.javaeat.request.CartItemRequest;
 import com.javaeat.request.CartRequest;
+import com.javaeat.request.OrderRequest;
+import com.javaeat.request.OrderResponse;
 import com.javaeat.services.CartService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class CartServiceImpl implements CartService {
+@Slf4j
+public class CartServiceImpl extends OrderHandler implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final CustomerRepository customerRepository;
@@ -131,7 +136,7 @@ public class CartServiceImpl implements CartService {
         cart.getCartItems().add(cartItem);
     }
 
-   /* @PostConstruct
+    @PostConstruct
     void init() {
 
         Cart cart = new Cart();
@@ -153,7 +158,23 @@ public class CartServiceImpl implements CartService {
         cart.setCustomer(customer);
 
         customerRepository.save(customer);
-    }*/
+    }
 
+    @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        Cart cart = getCart(request);
+        log.info("cart status: {}",cart.getStatus());
+        if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
+            log.info("Cart is locked. Cannot proceed with the order.");
+            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
+        }
+
+        log.info("move to the next handler (items validation), {}", getNext());
+        return handleNext(request,response);
+    }
+
+    private Cart getCart(OrderRequest request) {
+        return cartRepository.findById(request.getCartId()).orElseThrow(() -> new HandlerException("cart with ID " + request.getCartId() + " is not available."));
+    }
 }
 
