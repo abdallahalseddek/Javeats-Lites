@@ -1,9 +1,7 @@
 package com.javaeat.controller;
 
-import com.javaeat.enums.OrderStatus;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
-import com.javaeat.response.DeleteOrderResponse;
 import com.javaeat.response.OrderStatusResponse;
 import com.javaeat.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("api/order")
+@RequestMapping("api/v1/order")
 @Slf4j
 @Tag(name = "Place An Order Endpoints")
 @RequiredArgsConstructor

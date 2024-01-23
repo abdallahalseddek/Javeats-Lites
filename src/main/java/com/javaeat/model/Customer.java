@@ -1,9 +1,9 @@
 package com.javaeat.model;
 
+import com.javaeat.security.model.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -20,6 +20,9 @@ public class Customer  extends BaseEntity {
     @Column(name = "customer_id")
     @EqualsAndHashCode.Include
     private Integer id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")

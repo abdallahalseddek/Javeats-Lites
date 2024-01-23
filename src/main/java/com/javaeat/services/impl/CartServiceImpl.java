@@ -3,7 +3,10 @@ package com.javaeat.services.impl;
 import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.model.*;
+import com.javaeat.model.Cart;
+import com.javaeat.model.CartItem;
+import com.javaeat.model.Customer;
+import com.javaeat.model.MenuItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.CustomerRepository;
@@ -15,10 +18,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -130,7 +131,7 @@ public class CartServiceImpl implements CartService {
         cart.getCartItems().add(cartItem);
     }
 
-    @PostConstruct
+   /* @PostConstruct
     void init() {
 
         Cart cart = new Cart();
@@ -152,7 +153,7 @@ public class CartServiceImpl implements CartService {
         cart.setCustomer(customer);
 
         customerRepository.save(customer);
-    }
+    }*/
 
 }
 
