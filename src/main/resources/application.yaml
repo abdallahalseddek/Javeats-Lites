@@ -16,12 +16,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-#
-#  sql:
-#    init:
-#      continue-on-error: false
-#      mode: always
-#      schema-locations: 'classpath:sql/schema-*.sql'
-#      separator: '/'
+
+  sql:
+    init:
+      continue-on-error: false
+      mode: always
+      schema-locations: 'classpath:sql/schema-*.sql'
+      separator: '/'
 
 

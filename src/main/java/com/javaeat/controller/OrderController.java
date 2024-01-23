@@ -1,11 +1,13 @@
 package com.javaeat.controller;
 
 import com.javaeat.enums.OrderStatus;
+import com.javaeat.handler.order.*;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
 import com.javaeat.response.DeleteOrderResponse;
 import com.javaeat.response.OrderStatusResponse;
-import com.javaeat.services.OrderService;
+import com.javaeat.services.*;
+import com.javaeat.services.impl.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,8 +25,8 @@ import javax.validation.Valid;
 @Tag(name = "Place An Order Endpoints")
 @RequiredArgsConstructor
 public class OrderController {
-
-    private final OrderService orderService;
+    private final OrderServiceImp orderService;
+    private final OrderHandler orderHandlerChain;
 
     @PostMapping
     @Operation(summary = "Endpoint that creates an order.",
@@ -32,7 +34,16 @@ public class OrderController {
     @ApiResponse(responseCode = "201", description = "Order has been created Successfully")
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
         // a method to call the service to create the order
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(request));
+
+        OrderResponse response = OrderResponse.builder()
+                .customerId(request.getCustomerId())
+                .restaurantId(request.getRestaurantId())
+                .deliveryId(request.getDeliveryId())
+                .items(request.getItems())
+                .deliveryAddress(request.getDeliveryAddress())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderHandlerChain.handle(request,response));
     }
 
     @GetMapping("/{orderId}")

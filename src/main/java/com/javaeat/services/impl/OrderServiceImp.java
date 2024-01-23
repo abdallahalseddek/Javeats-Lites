@@ -1,11 +1,14 @@
 package com.javaeat.services.impl;
 
 import com.javaeat.enums.CartStatus;
+import com.javaeat.enums.OrderStatus;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
 import com.javaeat.handler.order.*;
 import com.javaeat.model.Cart;
 import com.javaeat.model.Order;
+import com.javaeat.model.Payment;
+import com.javaeat.model.Restaurant;
 import com.javaeat.repository.*;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
@@ -17,14 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class OrderServiceImp implements OrderService {
+public class OrderServiceImp extends OrderHandler implements OrderService {
 
     private final CartRepository cartRepository;
-    private final CartItemRepository cartItemRepository;
     private final RestaurantRepository restaurantRepository;
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
@@ -91,6 +94,37 @@ public class OrderServiceImp implements OrderService {
 
     private Order getOrderById(Integer orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(404, "Cannot find order with this id"));
+    }
+
+    @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        //clear cart
+        cartRepository.deleteById(request.getCartId());
+
+        Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).get();
+        Payment payment = paymentRepository.findById(response.getPaymentId()).get();
+
+        // save the order
+        Order order = Order.builder()
+                .orderTime(LocalDateTime.now())
+                .totalPrice(response.getTotalPrice())
+                .orderStatus(OrderStatus.PURCHASED)
+                .restaurant(restaurant)
+                .payment(payment)
+//                .delivery()
+//                .customer()
+                .build();
+
+
+
+        Order savedOrder = orderRepository.save(order);
+        payment.setOrder(savedOrder);
+
+        response.setOrderId(savedOrder.getOrderId());
+        response.setOrderTime(savedOrder.getOrderTime());
+        response.setOrderStatus(savedOrder.getOrderStatus());
+        log.info("Order has been placed successfully.");
+        return handleNext(request,response);
     }
 
 //    private void handleCartLock(OrderRequest request){
