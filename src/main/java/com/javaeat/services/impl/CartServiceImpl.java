@@ -4,7 +4,10 @@ import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.model.*;
+import com.javaeat.model.Cart;
+import com.javaeat.model.CartItem;
+import com.javaeat.model.Customer;
+import com.javaeat.model.MenuItem;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.CustomerRepository;
@@ -19,10 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -110,19 +111,6 @@ public class CartServiceImpl extends OrderHandler implements CartService {
         return cartRepository.save(newCart);
     }
 
-    @Override
-    @Transactional
-    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
-        Cart cart = getCart(request);
-        log.info("cart status: {}",cart.getStatus());
-        if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
-            log.info("Cart is locked. Cannot proceed with the order.");
-            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
-        }
-        return handleNext(request,response);
-    }
-
-
     private Cart getCartById(Integer cartId) {
         return cartRepository.findById(cartId).orElseThrow(
                 () -> new NotFoundException(HttpStatus.NOT_FOUND.value(),
@@ -148,30 +136,23 @@ public class CartServiceImpl extends OrderHandler implements CartService {
         cart.getCartItems().add(cartItem);
     }
 
-    @PostConstruct
-    void init() {
-
-        Cart cart = new Cart();
-        Address address = new Address();
-        address.setStreet("123 Main St");
-        address.setState("CA");
-        address.setGovernment("City");
-        address.setContactNumber("555-1234");
-        List<Address> addresses = new ArrayList<>();
-        addresses.add(address);
-
-        Customer customer = new Customer();
-        customer.setCart(cart);
-        customer.setAddresses(addresses);
-
-        cart.setTotalPrice(0.0);
-        cart.setStatus(CartStatus.READ_WRITE);
-        cart.setTotalItems(0);
-        cart.setCustomer(customer);
-
-        customerRepository.save(customer);
+    @Override
+    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
+        return null;
     }
 
+    @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        Cart cart = getCart(request);
+        log.info("cart status: {}",cart.getStatus());
+        if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
+            log.info("Cart is locked. Cannot proceed with the order.");
+            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
+        }
+
+        log.info("move to the next handler (items validation), {}", getNext());
+        return handleNext(request,response);
+    }
 
     private Cart getCart(OrderRequest request) {
         return cartRepository.findById(request.getCartId()).orElseThrow(() -> new HandlerException("cart with ID " + request.getCartId() + " is not available."));
