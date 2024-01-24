@@ -7,7 +7,6 @@ import com.javaeat.response.OrderStatusResponse;
 
 public interface OrderService {
 
-    OrderResponse createOrder(OrderRequest request);
 
     OrderResponse getOrder(Integer orderId);
 

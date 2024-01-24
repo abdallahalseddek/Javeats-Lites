@@ -4,7 +4,6 @@ import com.javaeat.enums.ErrorMessage;
 import com.javaeat.enums.Status;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.handler.order.OrderHandler;
 import com.javaeat.model.Restaurant;
 import com.javaeat.repository.RestaurantRepository;
 import com.javaeat.request.OrderRequest;
@@ -84,7 +83,7 @@ public class RestaurantServiceImpl extends OrderHandler implements RestaurantSer
     }
 
     @Override
-    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
 
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).orElseThrow(() -> new HandlerException("Restaurant with ID " + request.getRestaurantId() + " is not available."));
 

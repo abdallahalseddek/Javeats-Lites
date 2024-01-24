@@ -8,14 +8,22 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+  sql:
+    init:
+      continue-on-error: false
+      mode: always
+      schema-locations: 'classpath:sql/schema-*.sql'
+      separator: '/'
+
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+
 application:
   security:
     jwt:
@@ -23,12 +31,6 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
-#
-#  sql:
-#    init:
-#      continue-on-error: false
-#      mode: always
-#      schema-locations: 'classpath:sql/schema-*.sql'
-#      separator: '/'
+
 
 

@@ -3,7 +3,6 @@ package com.javaeat.services.impl;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.handler.order.OrderHandler;
 import com.javaeat.model.Menu;
 import com.javaeat.model.MenuItem;
 import com.javaeat.model.Restaurant;
@@ -135,7 +134,8 @@ public class MenuServiceImpl extends OrderHandler implements MenuService {
     }
 
     @Override
-    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+    @Transactional
+    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
         log.info("items validation handler");
         double totalPrice = request.getItems().stream()
                 .mapToDouble(cartItemRequest -> {
@@ -151,6 +151,15 @@ public class MenuServiceImpl extends OrderHandler implements MenuService {
                     return item.getPrice() * cartItemRequest.getQuantity();
                 })
                 .sum();
+
+        // subtract the order quantity from the menu items
+        request.getItems()
+                .forEach(cartItemRequest -> {
+                    MenuItem item = menuItemRepository.findById(cartItemRequest.getMenuItemId())
+                            .orElseThrow(() -> new HandlerException("Item with ID " + cartItemRequest.getId() + " is not available."));
+                    item.setQuantity(item.getQuantity() - cartItemRequest.getQuantity());
+                    menuItemRepository.save(item);
+                });
 
         log.info("Total price of the order: " + totalPrice);
         response.setTotalPrice(totalPrice);

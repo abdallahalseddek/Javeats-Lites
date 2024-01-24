@@ -1,4 +1,4 @@
-package com.javaeat.handler.order;
+package com.javaeat.services.impl;
 
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
@@ -12,16 +12,16 @@ public abstract class OrderHandler {
 
 
     public static OrderHandler processOrder(OrderHandler first, OrderHandler... chain) {
+        log.info("start initializing the chain of placing an order process...");
         OrderHandler head = first;
         for (OrderHandler nextInChain : chain) {
-            log.info("assign to the next");
             head.setNext(nextInChain);
             head = nextInChain;
         }
         return first;
     }
 
-    public abstract OrderResponse handle(OrderRequest request, OrderResponse response);
+    public abstract OrderResponse handleOrder(OrderRequest request, OrderResponse response);
 
     /**
      * Runs check on the next object in chain or ends traversing if we're in
@@ -31,6 +31,6 @@ public abstract class OrderHandler {
         if (next == null) {
             return response;
         }
-        return next.handle(request,response);
+        return next.handleOrder(request,response);
     }
 }

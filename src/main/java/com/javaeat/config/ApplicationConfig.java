@@ -36,13 +36,4 @@ public class ApplicationConfig {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-//    @Bean
-//    @Primary
-//    public ObjectMapper customJson() {
-//        ObjectMapper mapper = new Jackson2ObjectMapperBuilder()
-//                .build();
-//
-//        mapper.registerModule(new JavaTimeModule());
-//        return mapper;
-//    }
 }

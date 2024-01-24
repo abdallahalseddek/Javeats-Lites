@@ -1,10 +1,7 @@
 package com.javaeat.services.impl;
 
-import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.OrderStatus;
-import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.handler.order.*;
 import com.javaeat.model.Cart;
 import com.javaeat.model.Order;
 import com.javaeat.model.Payment;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,29 +31,37 @@ public class OrderServiceImp extends OrderHandler implements OrderService {
     private final OrderRepository orderRepository;
     private final MenuItemRepository menuItemRepository;
     private final MapperUtil mapperUtil;
-
-    @Transactional
     @Override
-    public OrderResponse createOrder(OrderRequest request) {
+    @Transactional
+    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
+        //clear cart
+        Cart cart = cartRepository.findById(request.getCartId()).get();
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
 
-        // set the chain of responsibilities
-        OrderHandler orderHandler = OrderHandler.processOrder(
-                  new CartLockCheckHandler(cartRepository)
-                , new ItemsAvailabilityCheckHandler(menuItemRepository)
-                , new RestaurantWorkingHoursCheckHandler(restaurantRepository)
-                , new PaymentProcessHandler(paymentRepository,cartRepository)
-                , new FinalizeOrderHandler(orderRepository,cartRepository,paymentRepository,restaurantRepository,mapperUtil));
+        //
+        Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).get();
+        Payment payment = paymentRepository.findById(response.getPaymentId()).get();
 
-        OrderResponse response = OrderResponse.builder()
-                .customerId(request.getCustomerId())
-                .restaurantId(request.getRestaurantId())
-                .deliveryId(request.getDeliveryId())
-                .items(request.getItems())
-                .deliveryAddress(request.getDeliveryAddress())
+        // save the order
+        Order order = Order.builder()
+                .orderTime(LocalDateTime.now())
+                .totalPrice(response.getTotalPrice())
+                .orderStatus(OrderStatus.PURCHASED)
+                .restaurant(restaurant)
+                .payment(payment)
+//                .delivery()
+//                .customer()
                 .build();
 
+        Order savedOrder = orderRepository.save(order);
+        payment.setOrder(savedOrder);
 
-        return orderHandler.handle(request,response);
+        response.setOrderId(savedOrder.getOrderId());
+        response.setOrderTime(savedOrder.getOrderTime());
+        response.setOrderStatus(savedOrder.getOrderStatus());
+        log.info("Order has been placed successfully.");
+        return handleNext(request,response);
     }
 
     @Override
@@ -96,36 +102,7 @@ public class OrderServiceImp extends OrderHandler implements OrderService {
         return orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(404, "Cannot find order with this id"));
     }
 
-    @Override
-    public OrderResponse handle(OrderRequest request, OrderResponse response) {
-        //clear cart
-        cartRepository.deleteById(request.getCartId());
 
-        Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId()).get();
-        Payment payment = paymentRepository.findById(response.getPaymentId()).get();
-
-        // save the order
-        Order order = Order.builder()
-                .orderTime(LocalDateTime.now())
-                .totalPrice(response.getTotalPrice())
-                .orderStatus(OrderStatus.PURCHASED)
-                .restaurant(restaurant)
-                .payment(payment)
-//                .delivery()
-//                .customer()
-                .build();
-
-
-
-        Order savedOrder = orderRepository.save(order);
-        payment.setOrder(savedOrder);
-
-        response.setOrderId(savedOrder.getOrderId());
-        response.setOrderTime(savedOrder.getOrderTime());
-        response.setOrderStatus(savedOrder.getOrderStatus());
-        log.info("Order has been placed successfully.");
-        return handleNext(request,response);
-    }
 
 //    private void handleCartLock(OrderRequest request){
 //        Cart cart = cartRepository.findById(request.getCartId()).orElseThrow(() -> new HandlerException("cart with ID " + request.getCartId() + " is not available."));

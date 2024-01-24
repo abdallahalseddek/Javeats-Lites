@@ -1,12 +1,8 @@
 package com.javaeat.controller;
 
-import com.javaeat.enums.OrderStatus;
-import com.javaeat.handler.order.*;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
-import com.javaeat.response.DeleteOrderResponse;
 import com.javaeat.response.OrderStatusResponse;
-import com.javaeat.services.*;
 import com.javaeat.services.impl.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +39,7 @@ public class OrderController {
                 .deliveryAddress(request.getDeliveryAddress())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderHandlerChain.handle(request,response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderHandlerChain.handleOrder(request,response));
     }
 
     @GetMapping("/{orderId}")

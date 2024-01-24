@@ -4,7 +4,6 @@ import com.javaeat.enums.CartStatus;
 import com.javaeat.enums.ErrorMessage;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.handler.order.OrderHandler;
 import com.javaeat.model.*;
 import com.javaeat.repository.CartItemRepository;
 import com.javaeat.repository.CartRepository;
@@ -111,6 +110,19 @@ public class CartServiceImpl extends OrderHandler implements CartService {
         return cartRepository.save(newCart);
     }
 
+    @Override
+    @Transactional
+    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
+        Cart cart = getCart(request);
+        log.info("cart status: {}",cart.getStatus());
+        if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
+            log.info("Cart is locked. Cannot proceed with the order.");
+            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
+        }
+        return handleNext(request,response);
+    }
+
+
     private Cart getCartById(Integer cartId) {
         return cartRepository.findById(cartId).orElseThrow(
                 () -> new NotFoundException(HttpStatus.NOT_FOUND.value(),
@@ -160,18 +172,6 @@ public class CartServiceImpl extends OrderHandler implements CartService {
         customerRepository.save(customer);
     }
 
-    @Override
-    public OrderResponse handle(OrderRequest request, OrderResponse response) {
-        Cart cart = getCart(request);
-        log.info("cart status: {}",cart.getStatus());
-        if (CartStatus.READ_ONLY.equals(cart.getStatus())) {
-            log.info("Cart is locked. Cannot proceed with the order.");
-            throw new HandlerException("Cart is locked. Cannot proceed with the order.");
-        }
-
-        log.info("move to the next handler (items validation), {}", getNext());
-        return handleNext(request,response);
-    }
 
     private Cart getCart(OrderRequest request) {
         return cartRepository.findById(request.getCartId()).orElseThrow(() -> new HandlerException("cart with ID " + request.getCartId() + " is not available."));

@@ -6,7 +6,6 @@ import com.javaeat.enums.PaymentMethod;
 import com.javaeat.enums.PaymentStatus;
 import com.javaeat.exception.HandlerException;
 import com.javaeat.exception.NotFoundException;
-import com.javaeat.handler.order.OrderHandler;
 import com.javaeat.model.Cart;
 import com.javaeat.model.Payment;
 import com.javaeat.payment.CardPaymentStrategy;
@@ -17,6 +16,7 @@ import com.javaeat.repository.CartRepository;
 import com.javaeat.repository.PaymentRepository;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
+import com.javaeat.request.PaymentProcessRequest;
 import com.javaeat.services.PaymentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +35,10 @@ public class PaymentServiceImpl extends OrderHandler implements PaymentService {
 
 
     @Override
-    public OrderResponse handle(OrderRequest request, OrderResponse response) {
-        PaymentStrategy paymentStrategy = getPaymentStrategy(request.getPaymentDetails().getMethod());
+    public OrderResponse handleOrder(OrderRequest request, OrderResponse response) {
+        PaymentStrategy paymentStrategy = getPaymentStrategy(request.getPaymentMethod());
 
-        if (!paymentStrategy.processPayment(request.getPaymentDetails())) {
+        if (!paymentStrategy.processPayment(PaymentProcessRequest.builder().method(request.getPaymentMethod()).amount(response.getTotalPrice()).build())) {
             log.info("Payment failed. Unlocking the cart.");
             //unlock the cart
             unlockCart(request.getCartId());
@@ -47,7 +47,7 @@ public class PaymentServiceImpl extends OrderHandler implements PaymentService {
 
         Payment payment = paymentRepository.save(Payment.builder()
                 .amount(response.getTotalPrice())
-                .method(request.getPaymentDetails().getMethod())
+                .method(request.getPaymentMethod())
                 .status(PaymentStatus.SUCCESS)
                 .build());
 

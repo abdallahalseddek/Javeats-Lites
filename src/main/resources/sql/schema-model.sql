@@ -1,6 +1,8 @@
 
 CREATE TABLE IF NOT EXISTS customer (
     customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(255)  NOT NULL,
+    email VARCHAR(255) NOT NULL ,
     creation_time TIMESTAMP NOT NULL,
     last_updated_time TIMESTAMP NOT NULL,
     created_by VARCHAR(255),
@@ -15,6 +17,7 @@ CREATE TABLE IF NOT EXISTS address (
     contact_number VARCHAR(255),
     customer_id INTEGER REFERENCES customer(customer_id)
     );
+
 CREATE TABLE IF NOT EXISTS restaurant (
     restaurant_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
@@ -74,11 +77,7 @@ CREATE TABLE IF NOT EXISTS cart_item (
     menu_item_id INTEGER REFERENCES menu_item(menu_item_id)
     );
 
-
-
-
-
-CREATE TABLE IF NOT EXISTS "order" (
+CREATE TABLE IF NOT EXISTS orders (
     order_id SERIAL PRIMARY KEY,
     order_time TIMESTAMP NOT NULL,
     total_price DOUBLE PRECISION,
@@ -93,8 +92,6 @@ CREATE TABLE IF NOT EXISTS payment (
     amount DOUBLE PRECISION,
     payment_method VARCHAR(255),
     payment_status VARCHAR(255),
-    order_id INTEGER REFERENCES "order"(order_id)
+    order_id INTEGER REFERENCES orders(order_id)
     );
-
-
 /

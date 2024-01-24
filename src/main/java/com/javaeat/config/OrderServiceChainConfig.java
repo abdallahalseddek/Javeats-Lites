@@ -1,6 +1,6 @@
 package com.javaeat.config;
 
-import com.javaeat.handler.order.OrderHandler;
+import com.javaeat.services.impl.OrderHandler;
 import com.javaeat.services.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
