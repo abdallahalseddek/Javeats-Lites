@@ -33,4 +33,6 @@ public abstract class OrderHandler {
         }
         return next.handleOrder(request,response);
     }
+
+    public abstract OrderResponse handle(OrderRequest request, OrderResponse response);
 }
