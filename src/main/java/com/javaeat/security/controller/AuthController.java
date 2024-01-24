@@ -4,7 +4,6 @@ import com.javaeat.security.dto.AuthRequest;
 import com.javaeat.security.dto.AuthResponse;
 import com.javaeat.security.dto.SignUpDto;
 import com.javaeat.security.dto.TokenRequest;
-import com.javaeat.security.model.User;
 import com.javaeat.security.services.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,15 @@ import javax.validation.Valid;
 @Tag(name = "Authentication EndPoints")
 public class AuthController {
     private final AuthService authService;
-    @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody @Valid SignUpDto signUpDto){
-        return ResponseEntity.ok(authService.signUp(signUpDto));
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid SignUpDto signUpDto){
+        return ResponseEntity.ok(authService.register(signUpDto));
     }
-    @PostMapping("/signIn")
-    public ResponseEntity<AuthResponse> signIn(@RequestBody @Valid AuthRequest authRequest){
-        return ResponseEntity.ok(authService.signIn(authRequest));
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid AuthRequest authRequest){
+        return ResponseEntity.ok(authService.authenticate(authRequest));
     }
+
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> generateRefreshToken(@RequestBody @Valid TokenRequest tokenRequest){
         return ResponseEntity.ok(authService.generateRefreshToken(tokenRequest));

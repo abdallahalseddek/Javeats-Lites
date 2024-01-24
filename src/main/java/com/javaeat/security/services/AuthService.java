@@ -12,7 +12,9 @@ import com.javaeat.security.dto.AuthResponse;
 import com.javaeat.security.dto.SignUpDto;
 import com.javaeat.security.dto.TokenRequest;
 import com.javaeat.security.enums.Role;
+import com.javaeat.security.model.Token;
 import com.javaeat.security.model.User;
+import com.javaeat.security.repository.TokenRepository;
 import com.javaeat.security.repository.UserRepository;
 import com.javaeat.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
+import static com.javaeat.security.enums.TokenType.BEARER;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -33,14 +37,19 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final CustomerRepository customerRepository;
+    private final TokenRepository tokenRepository;
 
-    public User signUp(SignUpDto signUpDto) {
+    public AuthResponse register(SignUpDto signUpDto) {
         isUserExists(signUpDto.getEmail());
         User user = mapper.mapEntity(signUpDto, User.class);
         user.setRole(Role.CUSTOMER);
         user.setPassword(encoder.encode(signUpDto.getPassword()));
         setUpUser(user);
-        return repository.save(user);
+        repository.save(user);
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(user, jwtToken);
+        return new AuthResponse(jwtToken, refreshToken);
     }
 
     public void setUpUser(User user) {
@@ -57,14 +66,28 @@ public class AuthService {
         customerRepository.save(customer);
     }
 
-    public AuthResponse signIn(AuthRequest authRequest) {
+    private void saveUserToken(User user, String token) {
+        if (tokenRepository.findByUser(user).isEmpty()) {
+            Token buildToken = Token.builder()
+                    .user(user)
+                    .token(token)
+                    .tokenType(BEARER)
+                    .isExpired(false)
+                    .isRevoked(false)
+                    .build();
+            tokenRepository.save(buildToken);
+        }
+    }
+
+    public AuthResponse authenticate(AuthRequest authRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authRequest.getEmail(), authRequest.getPassword()));
         User user = repository.findByEmail(authRequest.getEmail()).orElseThrow();
-        String jwt = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        return new AuthResponse(jwt, refreshToken);
+        saveUserToken(user, jwtToken);
+        return new AuthResponse(jwtToken, refreshToken);
     }
 
     public AuthResponse generateRefreshToken(TokenRequest tokenRequest) {
@@ -93,8 +116,9 @@ public class AuthService {
     }
 
     private void isUserExists(String email) {
-        repository.findByEmail(email).orElseThrow(() ->
-                new NotFoundException(HttpStatus.FORBIDDEN.value(),
-                        ErrorMessage.USER_ALREADY_EXISTS.name()));
+        if (repository.findByEmail(email).isPresent()) {
+            throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
+                    ErrorMessage.USER_ALREADY_EXISTS.name());
+        }
     }
 }
