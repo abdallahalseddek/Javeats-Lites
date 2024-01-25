@@ -1,6 +1,5 @@
 package com.javaeat.security.filter;
 
-import com.javaeat.security.repository.TokenRepository;
 import com.javaeat.security.services.JwtService;
 import com.javaeat.security.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserService userService;
-    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -45,10 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         userEmail = jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userService.loadUserByUsername(userEmail);
-            var isTokenValid = tokenRepository.findByToken(jwt)
-                    .map(t -> !t.isExpired() && !t.isRevoked())
-                    .orElse(false);
-            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+            if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

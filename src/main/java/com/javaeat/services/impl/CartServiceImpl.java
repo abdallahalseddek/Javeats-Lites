@@ -19,6 +19,8 @@ import com.javaeat.request.OrderResponse;
 import com.javaeat.services.CartService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Slf4j
+@EnableCaching
 public class CartServiceImpl extends OrderHandler implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
@@ -76,6 +79,7 @@ public class CartServiceImpl extends OrderHandler implements CartService {
         cart.setTotalItems(0);
     }
 
+    @Cacheable("items")
     @Override
     public List<CartItem> browseCart(Integer cartId) {
         Cart cart = getCartById(cartId);

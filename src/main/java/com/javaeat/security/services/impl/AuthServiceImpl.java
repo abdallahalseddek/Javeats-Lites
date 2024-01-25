@@ -9,9 +9,7 @@ import com.javaeat.model.Customer;
 import com.javaeat.repository.CustomerRepository;
 import com.javaeat.security.dto.*;
 import com.javaeat.security.enums.Role;
-import com.javaeat.security.model.Token;
 import com.javaeat.security.model.User;
-import com.javaeat.security.repository.TokenRepository;
 import com.javaeat.security.repository.UserRepository;
 import com.javaeat.security.services.AuthService;
 import com.javaeat.security.services.JwtService;
@@ -24,10 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-
 import java.security.Principal;
-
-import static com.javaeat.security.enums.TokenType.BEARER;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +33,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final CustomerRepository customerRepository;
-    private final TokenRepository tokenRepository;
 
     @Override
     public AuthResponse register(SignUpDto signUpDto) {
@@ -50,7 +44,6 @@ public class AuthServiceImpl implements AuthService {
         repository.save(user);
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(user, jwtToken);
         return new AuthResponse(jwtToken, refreshToken);
     }
 
@@ -68,19 +61,6 @@ public class AuthServiceImpl implements AuthService {
         customerRepository.save(customer);
     }
 
-    private void saveUserToken(User user, String token) {
-        if (tokenRepository.findByUser(user).isEmpty()) {
-            Token buildToken = Token.builder()
-                    .user(user)
-                    .token(token)
-                    .tokenType(BEARER)
-                    .isExpired(false)
-                    .isRevoked(false)
-                    .build();
-            tokenRepository.save(buildToken);
-        }
-    }
-
     @Override
     public AuthResponse authenticate(AuthRequest authRequest) {
         authenticationManager.authenticate(
@@ -89,7 +69,6 @@ public class AuthServiceImpl implements AuthService {
         User user = repository.findByEmail(authRequest.getEmail()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(user, jwtToken);
         return new AuthResponse(jwtToken, refreshToken);
     }
 
