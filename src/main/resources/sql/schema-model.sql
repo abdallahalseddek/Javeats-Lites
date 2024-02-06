@@ -1,241 +1,113 @@
-
--- create user type table
-DROP TABLE IF EXISTS userType;
-CREATE TABLE userType
-(
-    type_id SERIAL PRIMARY KEY,
-    name    VARCHAR(255)
-);
-
--- create user table
-DROP TABLE IF EXISTS USERS;
-CREATE TABLE USERS
+CREATE TABLE IF NOT EXISTS USERS
 (
     user_id   SERIAL PRIMARY KEY,
-    firstname VARCHAR(50)  NOT NULL,
-    lastname  VARCHAR(50),
-    email     VARCHAR(50)  NOT NULL UNIQUE,
-    password  VARCHAR(250) NOT NULL UNIQUE,
-    user_type SERIAL REFERENCES userType (type_id)
+    firstname VARCHAR(255) NOT NULL,
+    lastname  VARCHAR(255) NOT NULL,
+    email     VARCHAR(255) NOT NULL,
+    password  VARCHAR(255) NOT NULL,
+    role      VARCHAR(255) NOT NULL
 );
-
-
--- create customer table
-DROP TABLE IF EXISTS customer;
-CREATE TABLE customer
+CREATE TABLE IF NOT EXISTS customer
 (
-    customer_id SERIAL PRIMARY KEY,
-    user_id     SERIAL REFERENCES USERS (user_id)
+    customer_id       SERIAL PRIMARY KEY,
+    name              VARCHAR(255) NOT NULL,
+    email             VARCHAR(255) NOT NULL,
+    creation_time     TIMESTAMP    NOT NULL,
+    last_updated_time TIMESTAMP    NOT NULL,
+    created_by        VARCHAR(255),
+    updated_by        VARCHAR(255)
 );
 
--- create address table
-DROP TABLE IF EXISTS address;
-CREATE TABLE address
+CREATE TABLE IF NOT EXISTS address
 (
-    address_id   SERIAL PRIMARY KEY,
-    street       VARCHAR(50),
-    state        VARCHAR(50),
-    government   VARCHAR(50),
-    contact_numb VARCHAR(50),
-    customer_id  SERIAL REFERENCES customer (customer_id)
+    address_id     SERIAL PRIMARY KEY,
+    street         VARCHAR(255),
+    state          VARCHAR(255),
+    government     VARCHAR(255),
+    contact_number VARCHAR(255),
+    customer_id    INTEGER REFERENCES customer (customer_id)
 );
 
--- create Role table
-DROP TABLE IF EXISTS Role;
-CREATE TABLE Role
+CREATE TABLE IF NOT EXISTS restaurant
 (
-    role_id SERIAL PRIMARY KEY,
-    role    VARCHAR(50) NOT NULL
+    restaurant_id     SERIAL PRIMARY KEY,
+    name              VARCHAR(255),
+    description       VARCHAR(255),
+    location          VARCHAR(255),
+    status            VARCHAR(255),
+    opening_time      TIME,
+    closing_time      TIME,
+    creation_time     TIMESTAMP NOT NULL,
+    last_updated_time TIMESTAMP NOT NULL,
+    created_by        VARCHAR(255),
+    updated_by        VARCHAR(255)
 );
-
--- create userRole Table
-DROP TABLE IF EXISTS UserRole;
-CREATE TABLE UserRole
+CREATE TABLE IF NOT EXISTS menu
 (
-    user_id SERIAL REFERENCES USERS (user_id),
-    role_id SERIAL REFERENCES Role (role_id),
-    PRIMARY KEY (user_id, role_id)
+    menu_id           SERIAL PRIMARY KEY,
+    name              VARCHAR(255),
+    description       VARCHAR(255),
+    restaurant_id     INTEGER REFERENCES restaurant (restaurant_id),
+    creation_time     TIMESTAMP NOT NULL,
+    last_updated_time TIMESTAMP NOT NULL,
+    created_by        VARCHAR(255),
+    updated_by        VARCHAR(255)
 );
 
--- create Restaurant Table
-DROP TABLE IF EXISTS Restaurant;
-CREATE TABLE Restaurant
+CREATE TABLE IF NOT EXISTS menu_item
 (
-    restaurant_id   SERIAL PRIMARY KEY,
-    name            varchar(100) NOT NULL,
-    contact_details VARCHAR(200) NOT NULL,
-    location        VARCHAR(100) NOT NULL
+    menu_item_id      SERIAL PRIMARY KEY,
+    title             VARCHAR(255),
+    ingredients       VARCHAR(255),
+    price             DOUBLE PRECISION,
+    quantity          INTEGER,
+    menu_id           INTEGER REFERENCES menu (menu_id),
+    creation_time     TIMESTAMP NOT NULL,
+    last_updated_time TIMESTAMP NOT NULL,
+    created_by        VARCHAR(255),
+    updated_by        VARCHAR(255)
 );
 
--- create Restaurant Details Table
-DROP TABLE IF EXISTS RestaurantDetails;
-CREATE TABLE RestaurantDetails
+CREATE TABLE IF NOT EXISTS cart
 (
-    restaurant_details_id SERIAL PRIMARY KEY,
-    restaurant_id         SERIAL REFERENCES Restaurant (restaurant_id)
+    cart_id           SERIAL PRIMARY KEY,
+    total_price       DOUBLE PRECISION,
+    total_items       INTEGER,
+    cart_status       VARCHAR(255),
+    discount          DOUBLE PRECISION,
+    creation_time     TIMESTAMP NOT NULL,
+    last_updated_time TIMESTAMP NOT NULL,
+    created_by        VARCHAR(255),
+    updated_by        VARCHAR(255),
+    customer_id       INTEGER REFERENCES customer (customer_id)
 );
 
--- create Menu Table
-DROP TABLE IF EXISTS Menu;
-CREATE TABLE Menu
-(
-    menu_id       SERIAL PRIMARY KEY,
-    name          VARCHAR(100) NOT NULL,
-    description   TEXT,
-    restaurant_id SERIAL REFERENCES Restaurant (restaurant_id)
-);
-
--- create Menu item Table
-DROP TABLE IF EXISTS Menu_Item;
-CREATE TABLE Menu_Item
-(
-    menu_item_id SERIAL PRIMARY KEY,
-    title        VARCHAR(100) NOT NULL,
-    ingredients  VARCHAR(100),
-    price        DECIMAL(10, 2),
-    menu_id      SERIAL REFERENCES Menu (menu_id)
-);
-
--- create Cart Table
-DROP TABLE IF EXISTS cart;
-CREATE TABLE cart
-(
-    cart_id     SERIAL PRIMARY KEY,
-    total_price DECIMAL(10, 2),
-    session_id  SERIAL,
-    created_at  TIMESTAMP,
-    customer_id SERIAL REFERENCES customer (customer_id)
-);
-
--- create cart item table
-DROP TABLE IF EXISTS cart_item;
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS cart_item
 (
     cart_item_id SERIAL PRIMARY KEY,
-    menu_item_id SERIAL REFERENCES Menu_Item (menu_item_id),
-    cart_id      SERIAL REFERENCES cart (cart_id)
+    quantity     INTEGER,
+    unit_price   DOUBLE PRECISION,
+    total_price  DOUBLE PRECISION,
+    cart_id      INTEGER REFERENCES cart (cart_id),
+    menu_item_id INTEGER REFERENCES menu_item (menu_item_id)
 );
 
--- create orders table
-DROP TABLE IF EXISTS orders;
-CREATE TABLE orders
+CREATE TABLE IF NOT EXISTS orders
 (
-    order_id    SERIAL PRIMARY KEY,
-    total_price DECIMAL(10, 2),
-    created_at  TIMESTAMP,
-    customer_id SERIAL REFERENCES customer (customer_id)
+    order_id      SERIAL PRIMARY KEY,
+    order_time    TIMESTAMP NOT NULL,
+    total_price   DOUBLE PRECISION,
+    order_status  VARCHAR(255),
+    customer_id   INTEGER REFERENCES customer (customer_id),
+    restaurant_id INTEGER REFERENCES restaurant (restaurant_id),
+    UNIQUE (order_id)
 );
 
--- create order details table
-DROP TABLE IF EXISTS order_details;
-CREATE TABLE order_details
+CREATE TABLE IF NOT EXISTS payment
 (
-    orderD_id SERIAL PRIMARY KEY,
-    status    VARCHAR(20),
-    order_id  SERIAL REFERENCES orders (order_id),
-    cart_id   SERIAL REFERENCES cart (cart_id)
+    payment_id     SERIAL PRIMARY KEY,
+    amount         DOUBLE PRECISION,
+    payment_method VARCHAR(255),
+    payment_status VARCHAR(255),
+    order_id       INTEGER REFERENCES orders (order_id)
 );
-
-DROP TABLE IF EXISTS order_tracking;
--- create address table
-CREATE TABLE order_tracking
-(
-    id                 INT PRIMARY KEY,
-    location           VARCHAR(255),
-    estimate_date_time TIMESTAMP,
-    order_id           SERIAL REFERENCES orders (order_id)
-);
-
--- create auditing table
-DROP TABLE IF EXISTS auditing;
-CREATE TABLE auditing
-(
-    auditing_id SERIAL PRIMARY KEY,
-    details     VARCHAR(225),
-    type_id     INT,
-    date        TIMESTAMP
-);
-
--- create payment integration type table
-DROP TABLE IF EXISTS payment_integration_type;
-CREATE TABLE payment_integration_type
-(
-    id   INT PRIMARY KEY,
-    name VARCHAR(255)
-);
-
--- create payment status table
-DROP TABLE IF EXISTS payment_status;
-CREATE TABLE payment_status
-(
-    id   INT PRIMARY KEY,
-    name VARCHAR(255)
-);
-
--- create payment type configuration table
-DROP TABLE IF EXISTS payment_type_configuration;
-CREATE TABLE payment_type_configuration
-(
-    id                          INT PRIMARY KEY,
-    configuration_details       VARCHAR(255),
-    payment_integration_type_id SERIAL REFERENCES payment_integration_type (id)
-);
-
--- create preferred payment settings table
-DROP TABLE IF EXISTS preferred_payment_settings;
-CREATE TABLE preferred_payment_settings
-(
-    id                     INT PRIMARY KEY,
-    user_id                SERIAL REFERENCES USERS (user_id),
-    payment_type_config_id SERIAL REFERENCES payment_type_configuration (id)
-);
--- create transaction table table
-DROP TABLE IF EXISTS transaction_table;
-CREATE TABLE transaction_table
-(
-    id         SERIAL PRIMARY KEY,
-    status     VARCHAR(255),
-    audit_date DECIMAL,
-    order_id   SERIAL REFERENCES orders (order_id)
-);
--- create transaction auditing table
-DROP TABLE IF EXISTS transaction_auditing;
-CREATE TABLE transaction_auditing
-(
-    transaction_id SERIAL REFERENCES transaction_table (id),
-    auditing_id    SERIAL REFERENCES auditing (auditing_id),
-    PRIMARY KEY (transaction_id, auditing_id)
-
-);
-
--- create transaction details table
-DROP TABLE IF EXISTS transaction_details;
-CREATE TABLE transaction_details
-(
-    trans_id SERIAL PRIMARY KEY,
-    details  VARCHAR(255)
-);
-
-
--- create transaction payment status table
-DROP TABLE IF EXISTS transaction_payment_status;
-CREATE TABLE transaction_payment_status
-(
-    tran_pay_stat_id  SERIAL PRIMARY KEY,
-    transaction_id    SERIAL REFERENCES transaction_table (id),
-    payment_status_id SERIAL REFERENCES payment_status (id)
-);
-
-
--- create transaction transaction details table
-DROP TABLE IF EXISTS transaction_transaction_details;
-CREATE TABLE transaction_transaction_details
-(
-    trans_id   SERIAL REFERENCES transaction_table (id),
-    details_id SERIAL REFERENCES transaction_details (trans_id),
-    PRIMARY KEY (trans_id, details_id)
-
-);
-/
-
-

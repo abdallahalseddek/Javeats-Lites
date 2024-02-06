@@ -12,6 +12,7 @@ public class MenuItemRequest{
     private String title;
     private String ingredients;
     private Double price;
+    private Integer quantity;
     private Integer menuId;
     private Integer cartItem;
     private String createdBy;

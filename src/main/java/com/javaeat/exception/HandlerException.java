@@ -1,0 +1,14 @@
+package com.javaeat.exception;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@Data
+public class HandlerException extends RuntimeException {
+
+    private static final long serialVersionUID = 248611599356373897L;
+    private String message;
+}

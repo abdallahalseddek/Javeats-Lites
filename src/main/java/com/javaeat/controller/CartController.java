@@ -2,6 +2,7 @@ package com.javaeat.controller;
 
 import com.javaeat.enums.CartStatus;
 import com.javaeat.request.CartItemRequest;
+import com.javaeat.request.CartRequest;
 import com.javaeat.response.CartItemResponse;
 import com.javaeat.response.CartResponse;
 import com.javaeat.response.CartStatusResponse;
@@ -42,6 +43,18 @@ public class CartController {
         CartResponse response = mapper.mapEntity(cartService.addItemToCart(request), CartResponse.class);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    @PostMapping("/create_cart")
+    @Operation(summary = "create new cart", description = "create new cart")
+    @ApiResponse(responseCode = "201", description = "Successful operation",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request. Invalid input data")
+    @ApiResponse(responseCode = "404", description = "Customer not found or Item not Found")
+    @ApiResponse(responseCode = "500", description = "Internal server error. Something went wrong")
+    ResponseEntity<CartResponse> createCart(@RequestBody CartRequest cartRequest) {
+        CartResponse response = mapper.mapEntity(cartService.createCart(cartRequest), CartResponse.class);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
 
     @PatchMapping("/update/cartItem")
     @Operation(summary = "Endpoint that modifies cart.",

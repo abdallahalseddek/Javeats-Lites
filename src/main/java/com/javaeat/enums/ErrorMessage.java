@@ -22,7 +22,10 @@ public enum ErrorMessage {
 
     CART_NOT_FOUND("Cart not found"),
 
-    CART_ITEM_ALREADY_EXISTS("cart item already exists you cant add it");
+    CART_ITEM_ALREADY_EXISTS("cart item already exists you cant add it"),
+
+    CUSTOMER_NOT_FOUND("customer not exists"),
+    USER_ALREADY_EXISTS("User Already Exists");
 
     private final String message;
     ErrorMessage(String message) {

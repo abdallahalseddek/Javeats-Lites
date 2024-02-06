@@ -5,6 +5,7 @@ import com.javaeat.model.Cart;
 import com.javaeat.model.CartItem;
 import com.javaeat.model.MenuItem;
 import com.javaeat.request.CartItemRequest;
+import com.javaeat.request.CartRequest;
 import com.javaeat.response.*;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface CartService {
 
     Cart updateCartStatus(Integer cartId, CartStatus newStatus);
     MenuItem checkItemAvailable(Integer itemsId);
+
+    Cart createCart(CartRequest cartRequest);
 }

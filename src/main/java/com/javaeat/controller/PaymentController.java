@@ -1,8 +1,6 @@
 package com.javaeat.controller;
 
 import com.javaeat.request.PaymentProcessRequest;
-import com.javaeat.response.ItemsAvailabilityResponse;
-
 import com.javaeat.response.PaymentProcessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
-import java.util.List;
 
 
 @RestController
-@RequestMapping("api/payment")
+@RequestMapping("api/v1/payment")
 @Slf4j
 @Tag(name = "Payment Endpoints")
 public class PaymentController {
