@@ -92,6 +92,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>javeats</finalName>
 	</build>
 
 </project>
