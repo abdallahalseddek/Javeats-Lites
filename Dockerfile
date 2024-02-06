@@ -1,5 +1,5 @@
 FROM openjdk:11
-LABEL authors="alseddek"
+LABEL authors="Team: Hassan - Ahmed - Magdy - Alseddek"
 WORKDIR /app
 COPY . .
 COPY target/javeats.jar javeats.jar

@@ -1,11 +1,16 @@
 version: '3.1'
 
 services:
+  javeats_app:
+    container_name: javeats_restaurant_management_system
+    build: .
+    ports:
+      - "9090:9090"
   javeats_lites_db:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: javeats_lites
+      POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     ports:
