@@ -16,6 +16,7 @@ processes for restaurant owners and staff.
 - [Getting started](#getting-started)
 - [System Features](#system-features-and-use-cases)
 - [Diagrams](#Diagrams)
+- [Query Optimization](#query-optimization)
 - [Tasks Estimation Practice](#tasks-estimation)
 
 ## Getting started
@@ -36,7 +37,10 @@ processes for restaurant owners and staff.
     - Hit swagger URL in browser. [Swagger](http://localhost:9090/swagger-ui/index.html)
 
 ## System Features and Use-Cases
-[Mind Map](src/main/resources/img/order_sequence_diagaram.jpeg) fo the features, use-cases, Api Endpoints, and Database Tables.
+
+[Mind Map](src/main/resources/img/order_sequence_diagaram.jpeg) fo the features, use-cases, Api Endpoints, and Database
+Tables.
+
 1. Cart Management
     - add, modify, and view Cart
     - remove item or clear cart
@@ -54,8 +58,11 @@ processes for restaurant owners and staff.
     - create, view payment and integration With 3rd Party
     - view Payment Transactions
     - generate Transaction Receipt<br>
+
 - - - 
+
 ## Diagrams
+
 <p align="center">
 <img src="src/main/resources/img/sys_Arch.png" alt="System Architecture">
 </p>
@@ -71,14 +78,21 @@ processes for restaurant owners and staff.
 </p>
 <h3 align="center">Order Sequence Diagram</h3>
 
-## Tasks Estimation
-
 ## Query Optimization
+
 I performed the query optimization on Hibernate queries using `show-sql=true` property.
-You can mock the tests by add 10 million records in database using this [file](src/main/resources/data/test_data/mock-data.sql).
+You can mock the tests by add 10 million records in database using
+this [file](src/main/resources/data/test_data/mock-data.sql).
 <p align="center">
 <img src="src/main/resources/img/query_optimize_ex.jpg" alt="Query Optimization">
 </p>
 <h3 align="center">Query Optimization Examples</h3>
 
+## Tasks Estimation
+
+we mocked the Task Estimation to make it better for each developer working on the system. Here is examples of it:
+<p align="center">
+<img src="src/main/resources/img/estimation_tasks.png" alt="estimation 01">
+</p>
+<h3 align="center">Estimation Examples</h3>
 
