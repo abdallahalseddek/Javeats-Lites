@@ -1,10 +1,9 @@
 package com.javaeat.repository;
 
-import com.javaeat.model.Menu;
 import com.javaeat.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Repository;
 
-@RestController
-public interface OrderRepository extends JpaRepository<Order,Integer> {
+@Repository
+public interface OrderRepository extends JpaRepository<Order ,Integer> {
 }

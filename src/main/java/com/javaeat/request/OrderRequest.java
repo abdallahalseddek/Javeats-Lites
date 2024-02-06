@@ -1,5 +1,6 @@
 package com.javaeat.request;
 
+import com.javaeat.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class OrderRequest implements Serializable {
     private Integer customerId;
     private Integer restaurantId;
     private Integer deliveryId;
-    private PaymentProcessRequest paymentDetails;
+    private PaymentMethod paymentMethod;
     private List<CartItemRequest> items;
     private String deliveryAddress;
 

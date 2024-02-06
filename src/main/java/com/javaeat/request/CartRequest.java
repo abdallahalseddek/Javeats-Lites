@@ -13,12 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CartRequest {
     private Integer id;
+    private Integer customerId;
     private Double totalPrice;
     private Integer totalItems;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private CartStatus status;
     private Double discount;
+
     private String createdBy;
     private String updatedBy;
 }

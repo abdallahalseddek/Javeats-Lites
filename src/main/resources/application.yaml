@@ -3,10 +3,17 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/javeats_lites
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
+#  sql:
+#    init:
+#      continue-on-error: false
+#      mode: always
+#      schema-locations: 'classpath:sql/schema-*.sql'
+#      separator: '/'
 
   jpa:
     hibernate:
@@ -17,11 +24,13 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
-  sql:
-    init:
-      continue-on-error: false
-      mode: always
-      schema-locations: 'classpath:sql/schema-*.sql'
-      separator: '/'
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
+
 
 
