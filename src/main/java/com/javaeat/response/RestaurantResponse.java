@@ -18,7 +18,7 @@ public class RestaurantResponse {
     private String description;
     private Status status;
     private String location;
-    private List<Menu> menus;
+//    private List<Menu> menus;
     private String createdBy;
     private String updatedBy;
     private LocalTime OpeningTime;

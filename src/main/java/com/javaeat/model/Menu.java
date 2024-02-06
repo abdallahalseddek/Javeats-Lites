@@ -22,7 +22,7 @@ public class Menu extends BaseEntity{
     private String name;
     @Column(name = "description")
     private String description;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id",referencedColumnName = "restaurant_id")
     private Restaurant restaurant;
     public static Menu menuBuilder(MenuRequest request){

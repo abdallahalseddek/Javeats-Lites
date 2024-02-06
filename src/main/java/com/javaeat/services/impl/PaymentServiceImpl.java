@@ -55,6 +55,11 @@ public class PaymentServiceImpl extends OrderHandler implements PaymentService {
         return handleNext(request,response);
     }
 
+    @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        return null;
+    }
+
     private void unlockCart(Integer cartId) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(
                 () -> new NotFoundException(HttpStatus.NOT_FOUND.value(),

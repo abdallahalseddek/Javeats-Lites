@@ -1,8 +1,6 @@
 package com.javaeat.config;
 
-import com.javaeat.services.impl.OrderHandler;
 import com.javaeat.services.impl.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,22 +8,30 @@ import org.springframework.context.annotation.Configuration;
 public class OrderServiceChainConfig {
 
 
-    @Autowired
-    private CartServiceImpl cartService;
-    @Autowired
-    private MenuServiceImpl menuService;
-    @Autowired
-    private RestaurantServiceImpl restaurantService;
-    @Autowired
-    private PaymentServiceImpl paymentService;
-    @Autowired
-    private OrderServiceImp orderService;
+    private final CartServiceImpl cartService;
+    private final MenuServiceImpl menuService;
+    private final RestaurantServiceImpl restaurantService;
+    private final PaymentServiceImpl paymentService;
+    private final OrderServiceImp orderService;
+
+    public OrderServiceChainConfig(
+            CartServiceImpl cartService,
+            MenuServiceImpl menuService,
+            RestaurantServiceImpl restaurantService,
+            PaymentServiceImpl paymentService,
+            OrderServiceImp orderService) {
+        this.cartService = cartService;
+        this.menuService = menuService;
+        this.restaurantService = restaurantService;
+        this.paymentService = paymentService;
+        this.orderService = orderService;
+    }
 
     @Bean
     public OrderHandler orderHandlerChain() {
         // set the chain of responsibilities
         return OrderHandler.processOrder(
-                  cartService
+                cartService
                 , menuService
                 , restaurantService
                 , paymentService

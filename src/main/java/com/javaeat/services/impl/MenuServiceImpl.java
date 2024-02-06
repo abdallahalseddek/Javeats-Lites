@@ -166,4 +166,9 @@ public class MenuServiceImpl extends OrderHandler implements MenuService {
 
         return handleNext(request, response);
     }
+
+    @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        return null;
+    }
 }

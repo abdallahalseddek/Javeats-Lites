@@ -38,7 +38,7 @@ public class Cart extends BaseEntity{
     private List<CartItem> cartItems;
 
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 

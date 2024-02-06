@@ -25,7 +25,7 @@ public class MenuItem extends BaseEntity{
     private Double price;
     @Column(name = "quantity")
     private Integer quantity;
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "menu_id",referencedColumnName = "menu_id")
     private Menu menu;
     public static MenuItem itemBuilder(MenuItemRequest request){

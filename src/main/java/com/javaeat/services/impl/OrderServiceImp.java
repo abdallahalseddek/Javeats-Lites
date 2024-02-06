@@ -65,6 +65,11 @@ public class OrderServiceImp extends OrderHandler implements OrderService {
     }
 
     @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        return null;
+    }
+
+    @Override
     public OrderResponse getOrder(Integer orderId) {
         Order order = getOrderById(orderId);
         return mapperUtil.mapEntity(order, OrderResponse.class);

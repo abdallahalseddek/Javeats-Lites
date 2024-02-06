@@ -12,6 +12,7 @@ import com.javaeat.request.RestaurantRequest;
 import com.javaeat.services.RestaurantService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -59,8 +60,8 @@ public class RestaurantServiceImpl extends OrderHandler implements RestaurantSer
     }
 
     @Override
-    public List<Restaurant> listAllRestaurants() {
-        return restaurantRepository.findAllByRestaurantStatus(Status.ACTIVE);
+    public List<Restaurant> listAllRestaurants(Pageable pageable) {
+        return restaurantRepository.findAllByRestaurantStatus(Status.ACTIVE,pageable);
     }
 
     @Override
@@ -99,5 +100,10 @@ public class RestaurantServiceImpl extends OrderHandler implements RestaurantSer
             throw new HandlerException("The restaurant is currently closed.");
         }
         return handleNext(request,response);
+    }
+
+    @Override
+    public OrderResponse handle(OrderRequest request, OrderResponse response) {
+        return null;
     }
 }

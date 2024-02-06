@@ -45,7 +45,7 @@ public class Order{
     private Payment payment;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "delivery_id")
+//    @JoinColumn(name = "delivery_id")
     private Delivery delivery ;
 
     // Method to update the order status

@@ -3,17 +3,17 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/javeats_lites
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
 
-  sql:
-    init:
-      continue-on-error: false
-      mode: always
-      schema-locations: 'classpath:sql/schema-*.sql'
-      separator: '/'
+#  sql:
+#    init:
+#      continue-on-error: false
+#      mode: always
+#      schema-locations: 'classpath:sql/schema-*.sql'
+#      separator: '/'
 
   jpa:
     hibernate:
