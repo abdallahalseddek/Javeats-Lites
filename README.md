@@ -38,7 +38,7 @@ processes for restaurant owners and staff.
 
 ## System Features and Use-Cases
 
-[Mind Map](src/main/resources/img/order_sequence_diagaram.jpeg) fo the features, use-cases, Api Endpoints, and Database
+[Mind Map](src/main/resources/img/mind_map_project_all.png) fo the features, use-cases, Api Endpoints, and Database
 Tables.
 
 1. Cart Management
@@ -76,7 +76,7 @@ Tables.
 <p align="center">
 <img src="src/main/resources/img/db-design.png" alt="Entity Relationship Diagram">
 </p>
-<h3 align="center">Order Sequence Diagram</h3>
+<h3 align="center">Entity Relationship Diagram</h3>
 
 ## Query Optimization
 
