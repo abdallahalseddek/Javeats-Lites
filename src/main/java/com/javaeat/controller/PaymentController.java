@@ -5,6 +5,7 @@ import com.javaeat.response.PaymentProcessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,13 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 
 @RestController
-@RequestMapping("api/v1/payment")
+@RequestMapping("api/v1/payments")
 @Slf4j
-@Tag(name = "Payment Endpoints")
+@Tag(name = "Payments Endpoints")
 public class PaymentController {
 
 

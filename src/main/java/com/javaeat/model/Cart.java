@@ -2,7 +2,7 @@ package com.javaeat.model;
 
 import com.javaeat.enums.CartStatus;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.javaeat.request.CartRequest;
 import lombok.*;
