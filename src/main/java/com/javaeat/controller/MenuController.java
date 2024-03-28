@@ -17,15 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("api/v1/menu")
+@RequestMapping("api/v1/menus")
 @Slf4j
-@Tag(name = "Menu Endpoints")
+@Tag(name = "Menus Endpoints")
 @RequiredArgsConstructor
 public class MenuController {
     private final MenuService menuService;

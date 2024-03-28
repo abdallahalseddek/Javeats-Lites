@@ -7,18 +7,18 @@ import com.javaeat.services.impl.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @RestController
-@RequestMapping("api/order")
+@RequestMapping("api/v1/orders")
 @Slf4j
-@Tag(name = "Place An Order Endpoints")
+@Tag(name = "Orders Endpoints")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderServiceImp orderService;
@@ -53,7 +53,7 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/cancel/{orderId}")
+    @DeleteMapping("/{orderId}")
     @Operation(summary = "Endpoint that cancel order.",
             description = "Endpoint that cancel the order.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")

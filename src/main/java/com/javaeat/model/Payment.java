@@ -4,7 +4,7 @@ import com.javaeat.enums.PaymentMethod;
 import com.javaeat.enums.PaymentStatus;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor

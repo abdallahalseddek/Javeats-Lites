@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/delivery")
+@RequestMapping("api/v1/deliveries")
 @Slf4j
-@Tag(name = "Delivery Endpoints")
+@Tag(name = "Deliveries Endpoints")
 public class DeliveryController {
 
 

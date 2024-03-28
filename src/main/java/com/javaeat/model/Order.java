@@ -5,13 +5,13 @@ import com.javaeat.exception.HandlerException;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "Orders")
+@Table(name = "Order")
 @AllArgsConstructor
 @Builder
 @Getter

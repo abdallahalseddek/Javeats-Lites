@@ -14,10 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartResponse implements Serializable {
-    private static final long serialVersionUID = -8122049585335550616L;
 
+    @Builder.Default
+    private static final long serialVersionUID = -8122049585335550616L;
     private Integer cartId;
     private List<CartItemResponse> items;
+    @Builder.Default
     private CartStatus cartStatus= CartStatus.READ_WRITE;
 
 

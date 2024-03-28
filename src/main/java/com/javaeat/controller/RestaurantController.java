@@ -7,6 +7,7 @@ import com.javaeat.services.RestaurantService;
 import com.javaeat.util.MapperUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -15,26 +16,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/restaurant")
+@RequestMapping("api/v1/restaurants")
 @Slf4j
-@Tag(name = "Restaurant Endpoints")
+@Tag(name = "Restaurants Endpoints")
 @RequiredArgsConstructor
 public class RestaurantController {
     private final RestaurantService restaurantService;
     private final MapperUtil mapper;
 
-    @PostMapping("/create")
+    @PostMapping("")
     @Operation(summary = "Add a new Restaurant", description = "Add a new Restaurant")
     public ResponseEntity<RestaurantResponse> addNewRestaurant(@RequestBody @Valid RestaurantRequest restaurantRequest) {
         RestaurantResponse response = mapper.mapEntity(restaurantService.addNewRestaurant(restaurantRequest), RestaurantResponse.class);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("")
     @Operation(summary = "update Restaurant info", description = "update Restaurant info")
     public ResponseEntity<RestaurantResponse> updateRestaurant(@RequestBody @Valid RestaurantRequest restaurantRequest) {
         RestaurantResponse response = mapper.mapEntity(restaurantService.updateRestaurant(restaurantRequest), RestaurantResponse.class);
@@ -48,7 +48,7 @@ public class RestaurantController {
         return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 
-    @GetMapping("/all")
+    @GetMapping("")
     @Operation(summary = "list all Restaurants", description = "list all Restaurants")
     public ResponseEntity<List<RestaurantResponse>> listAllRestaurants(@RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size) {
@@ -57,7 +57,7 @@ public class RestaurantController {
         return new ResponseEntity<>(responseList, HttpStatus.FOUND);
     }
 
-    @PutMapping("/delete/{restaurantId}")
+    @DeleteMapping("/{restaurantId}")
     @Operation(summary = "delete Restaurant", description = "delete Restaurant")
     public ResponseEntity<String> deleteRestaurant(@PathVariable Integer restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);

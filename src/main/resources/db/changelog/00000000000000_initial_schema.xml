@@ -1,0 +1,233 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="Ahmed" id="1711614917079-1">
+        <createTable tableName="address">
+            <column autoIncrement="true" name="address_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="address_pkey"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="country" type="VARCHAR(255)"/>
+            <column name="state" type="VARCHAR(255)"/>
+            <column name="street" type="VARCHAR(255)"/>
+            <column name="restaurant_id" type="INTEGER"/>
+            <column name="customer_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-2">
+        <createTable tableName="cart">
+            <column autoIncrement="true" name="cart_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cart_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="discount" type="FLOAT8"/>
+            <column name="cart_status" type="VARCHAR(255)"/>
+            <column name="total_items" type="INTEGER"/>
+            <column name="total_price" type="FLOAT8"/>
+            <column name="customer_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-3">
+        <createTable tableName="cart_item">
+            <column autoIncrement="true" name="cart_item_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cart_item_pkey"/>
+            </column>
+            <column name="quantity" type="INTEGER"/>
+            <column name="total_price" type="FLOAT8"/>
+            <column name="unit_price" type="FLOAT8"/>
+            <column name="cart_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-4">
+        <createTable tableName="customer">
+            <column autoIncrement="true" name="customer_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="customer_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="user_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-5">
+        <createTable tableName="delivery">
+            <column autoIncrement="true" name="delivery_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="delivery_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="estimated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delviery_status" type="VARCHAR(255)"/>
+            <column name="order_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-6">
+        <createTable tableName="menu">
+            <column autoIncrement="true" name="menu_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="menu_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="restaurant_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-7">
+        <createTable tableName="menu_item">
+            <column autoIncrement="true" name="menu_item_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="menu_item_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="ingredients" type="VARCHAR(255)"/>
+            <column name="price" type="FLOAT8"/>
+            <column name="quantity" type="INTEGER"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="menu_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-8">
+        <createTable tableName="order">
+            <column autoIncrement="true" name="order_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_pkey"/>
+            </column>
+            <column name="order_status" type="VARCHAR(255)"/>
+            <column name="order_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="FLOAT8"/>
+            <column name="customer_id" type="INTEGER"/>
+            <column name="delivery_delivery_id" type="BIGINT"/>
+            <column name="payment_payment_id" type="BIGINT"/>
+            <column name="restaurant_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-9">
+        <createTable tableName="payment">
+            <column autoIncrement="true" name="payment_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="payment_pkey"/>
+            </column>
+            <column name="amount" type="FLOAT8"/>
+            <column name="payment_method" type="VARCHAR(255)"/>
+            <column name="payment_status" type="VARCHAR(255)"/>
+            <column name="order_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-10">
+        <createTable tableName="restaurant">
+            <column autoIncrement="true" name="restaurant_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="restaurant_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="closing_time" type="time(6) WITHOUT TIME ZONE"/>
+            <column name="opening_time" type="time(6) WITHOUT TIME ZONE"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="location" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-11">
+        <createTable tableName="app_user">
+            <column autoIncrement="true" name="id" startWith="2" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="app_user_pkey"/>
+            </column>
+            <column name="app_username" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)"/>
+            <column name="firstname" type="VARCHAR(255)"/>
+            <column name="lastname" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-12">
+        <addUniqueConstraint columnNames="customer_id" constraintName="uk_867x3yysb1f3jk41cv3vsoejj" tableName="cart"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-13">
+        <addUniqueConstraint columnNames="user_id" constraintName="uk_j7ja2xvrxudhvssosd4nu1o92" tableName="customer"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-14">
+        <addUniqueConstraint columnNames="payment_payment_id" constraintName="uk_816brsu01re0q3xwlxqqo78bw" tableName="order"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-15">
+        <addUniqueConstraint columnNames="order_id" constraintName="uk_mf7n8wo2rwrxsd6f3t9ub2mep" tableName="payment"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-16">
+        <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="cart_item" constraintName="fk1uobyhgl1wvgt1jpccia8xxs3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="cart_id" referencedTableName="cart" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-17">
+        <addForeignKeyConstraint baseColumnNames="restaurant_id" baseTableName="address" constraintName="fk6218puogn7aamlck6quuf39ll" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="restaurant_id" referencedTableName="restaurant" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-18">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="order" constraintName="fk624gtjin3po807j3vix093tlf" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="customer_id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-19">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="address" constraintName="fk93c3js0e22ll1xlu21nvrhqgg" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="customer_id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-20">
+        <addForeignKeyConstraint baseColumnNames="restaurant_id" baseTableName="menu" constraintName="fkblwdtxevpl4mrds8a12q0ohu6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="restaurant_id" referencedTableName="restaurant" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-21">
+        <addForeignKeyConstraint baseColumnNames="menu_id" baseTableName="menu_item" constraintName="fkcdkmv42yhn6udah6ug8rsymfl" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="menu_id" referencedTableName="menu" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-22">
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="cart" constraintName="fkdebwvad6pp1ekiqy5jtixqbaj" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="customer_id" referencedTableName="customer" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-23">
+        <addForeignKeyConstraint baseColumnNames="delivery_delivery_id" baseTableName="order" constraintName="fkhm3peyvvien09g62ecqpubotg" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="delivery_id" referencedTableName="delivery" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-24">
+        <addForeignKeyConstraint baseColumnNames="restaurant_id" baseTableName="order" constraintName="fki7hgjxhw21nei3xgpe4nnpenh" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="restaurant_id" referencedTableName="restaurant" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-25">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="payment" constraintName="fklouu98csyullos9k25tbpk4va" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="order_id" referencedTableName="order" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-26">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="customer" constraintName="fkra1cb3fu95r1a0m7aksow0nk4" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="app_user" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-27">
+        <addForeignKeyConstraint baseColumnNames="payment_payment_id" baseTableName="order" constraintName="fks3qubols92e6p6bd1rfhfnhy7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="payment_id" referencedTableName="payment" validate="true"/>
+    </changeSet>
+    <changeSet author="Ahmed" id="1711614917079-28">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="delivery" constraintName="fku4e8rjwmg09vmas3ccjwglso" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="order_id" referencedTableName="order" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

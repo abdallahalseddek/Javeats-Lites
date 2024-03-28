@@ -4,7 +4,7 @@ import com.javaeat.enums.Status;
 import com.javaeat.request.RestaurantRequest;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalTime;
 import java.util.List;
 

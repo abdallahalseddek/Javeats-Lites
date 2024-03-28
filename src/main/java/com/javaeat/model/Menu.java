@@ -3,7 +3,7 @@ package com.javaeat.model;
 import com.javaeat.request.MenuRequest;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

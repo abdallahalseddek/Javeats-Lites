@@ -1,0 +1,2 @@
+id,app_username,email,firstname,lastname,password,role
+1,admin,admin@javeats.com,Admin,user,$2a$10$cAAFMmP9Kd.uobnObEMu1.XUJfDHY6M/TIhJ7uMh/lOf11hRIKh6G,ADMIN

@@ -21,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.security.Principal;
 
 @Service
@@ -63,10 +62,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse authenticate(AuthRequest authRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authRequest.getEmail(), authRequest.getPassword()));
-        User user = repository.findByEmail(authRequest.getEmail()).orElseThrow();
+        authenticationManager.authenticate( new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        User user = repository.findByUsername(authRequest.getUsername()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         return new AuthResponse(jwtToken, refreshToken);
@@ -75,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse generateRefreshToken(TokenRequest tokenRequest) {
         String email = jwtService.extractUsername(tokenRequest.getToken());
-        User user = repository.findByEmail(email).orElseThrow();
+        User user = repository.findByUsername(email).orElseThrow();
         if (jwtService.isTokenValid(tokenRequest.getToken(), user)) {
             String jwt = jwtService.generateToken(user);
             return new AuthResponse(jwt, tokenRequest.getToken());
@@ -99,23 +96,9 @@ public class AuthServiceImpl implements AuthService {
         repository.save(user);
     }
 
-    @PostConstruct
-    void addAdminAccount() {
-        User adminAccount = repository.findByRole(Role.ADMIN);
-        if (adminAccount == null) {
-            User user = new User();
-            user.setFirstname("user");
-            user.setLastname("user");
-            user.setRole(Role.ADMIN);
-            user.setEmail("admin@javeats.com");
-            user.setRole(Role.ADMIN);
-            user.setPassword(encoder.encode("admin"));
-            repository.save(user);
-        }
-    }
 
-    private void isUserExists(String email) {
-        if (repository.findByEmail(email).isPresent()) {
+    private void isUserExists(String username) {
+        if (repository.findByUsername(username).isPresent()) {
             throw new NotFoundException(HttpStatus.FORBIDDEN.value(),
                     ErrorMessage.USER_ALREADY_EXISTS.name());
         }

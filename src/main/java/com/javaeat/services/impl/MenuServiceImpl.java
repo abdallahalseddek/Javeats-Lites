@@ -14,12 +14,12 @@ import com.javaeat.request.MenuRequest;
 import com.javaeat.request.OrderRequest;
 import com.javaeat.request.OrderResponse;
 import com.javaeat.services.MenuService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
