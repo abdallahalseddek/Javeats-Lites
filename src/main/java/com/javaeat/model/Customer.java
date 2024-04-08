@@ -1,9 +1,10 @@
 package com.javaeat.model;
 
 import com.javaeat.security.model.User;
+
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Setter

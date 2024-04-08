@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/00000000000000_initial_schema.xml
+  - include:
+      file: db/changelog/20240328123224_added_admin-user.xml

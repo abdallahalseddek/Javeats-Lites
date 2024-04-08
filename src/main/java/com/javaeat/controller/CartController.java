@@ -20,13 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/cart")
+@RequestMapping("api/v1/carts")
 @Slf4j
-@Tag(name = "Cart Endpoints")
+@Tag(name = "Carts Endpoints")
 @AllArgsConstructor
 public class CartController {
     private final CartService cartService;
@@ -43,7 +43,7 @@ public class CartController {
         CartResponse response = mapper.mapEntity(cartService.addItemToCart(request), CartResponse.class);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    @PostMapping("/create_cart")
+    @PostMapping("")
     @Operation(summary = "create new cart", description = "create new cart")
     @ApiResponse(responseCode = "201", description = "Successful operation",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class)))
@@ -56,7 +56,7 @@ public class CartController {
     }
 
 
-    @PatchMapping("/update/cartItem")
+    @PatchMapping("")
     @Operation(summary = "Endpoint that modifies cart.",
             description = "Endpoint that modifies the cart.")
     @ApiResponse(responseCode = "200", description = "Successful Operation")
@@ -86,7 +86,7 @@ public class CartController {
         return ResponseEntity.ok("all cart items of cart '"  + cartId + "' Deleted successfully");
     }
 
-    @GetMapping("/browse-cart/{cartId}")
+    @GetMapping("/{cartId}")
     @Operation(summary = "Endpoint that list all items in the cart",
             description = "Endpoint that list all items in the cart")
     @ApiResponse(responseCode = "200", description = "Successful Operation")

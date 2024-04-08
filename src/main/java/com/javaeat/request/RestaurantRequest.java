@@ -3,7 +3,7 @@ package com.javaeat.request;
 import com.javaeat.enums.Status;
 import lombok.*;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 

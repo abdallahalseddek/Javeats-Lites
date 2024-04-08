@@ -2,7 +2,7 @@ package com.javaeat.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @Setter
@@ -24,11 +24,11 @@ public class Address {
     @Column(name = "state")
     private String state;
 
-    @Column(name = "government")
-    private String government;
+    @Column(name = "country")
+    private String country;
 
-    @Column(name = "contact_number")
-    private String contactNumber;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
 
 }
